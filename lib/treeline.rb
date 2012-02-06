@@ -1,5 +1,4 @@
-require "treeline/version"
+require 'redis'
 
-module Treeline
-  # Your code goes here...
-end
+require_relative "treeline/version"
+require_relative "treeline/queue"

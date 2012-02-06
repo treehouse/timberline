@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.name        = "treeline"
   s.version     = Treeline::VERSION
   s.authors     = ["Tommy Morgan"]
-  s.email       = ["tommy.morgan@gmail.com"]
+  s.email       = ["duwanis@teamtreehouse.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Treeline is a queue management library built for internal use at Treehouse.}
+  s.description = %q{Custom queuing engine written mainly to support code challenges.}
 
   s.rubyforge_project = "treeline"
 
