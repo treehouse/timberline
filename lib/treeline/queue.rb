@@ -1,10 +1,10 @@
-module Treeline
+class Treeline
   class Queue
-    attr_accessor :queue_name
+    attr_reader :queue_name
 
     def initialize(queue_name)
       @queue_name = queue_name
-      @redis = Redis.new
+      @redis = Treeline.redis
     end
 
     def length
@@ -12,11 +12,24 @@ module Treeline
     end
 
     def pop
-      @redis.rpop @queue_name
+      envelope_string = @redis.rpop @queue_name
+      if envelope_string.nil?
+        nil
+      else
+        Envelope.from_json(envelope_string)
+      end
     end
 
     def push(item)
-      @redis.lpush @queue_name, item
+      @redis.lpush @queue_name, wrap(item)
+    end
+
+    private
+
+    def wrap(item)
+      envelope = Envelope.new
+      envelope.contents = item
+      envelope
     end
 
   end
