@@ -15,7 +15,13 @@ describe Treeline::Queue do
       assert_equal 0, @queue.length
     end
 
-    it "responds nil to a pop request" do
+    it "has a default read_timeout of 0" do
+      assert_equal 0, @queue.read_timeout
+    end
+
+    it "responds nil to a pop request after the read_timeout occurs" do
+      # Let's set the read_timeout to 1 in order for this test to return
+      @queue.instance_variable_set("@read_timeout", 1)
       assert_equal nil, @queue.pop
     end
 
@@ -50,6 +56,8 @@ describe Treeline::Queue do
     end
 
     it "responds nil to a second pop" do
+      # Let's set the read_timeout to 1 in order for this test to return
+      @queue.instance_variable_set("@read_timeout", 1)
       assert_equal @test_item, @queue.pop.contents
       assert_equal nil, @queue.pop
     end
