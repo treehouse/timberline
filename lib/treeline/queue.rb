@@ -23,7 +23,12 @@ class Treeline
     end
 
     def push(item)
-      @redis.lpush @queue_name, wrap(item)
+      case item
+      when Envelope
+        @redis.lpush @queue_name, item
+      else
+        @redis.lpush @queue_name, wrap(item)
+      end
     end
 
     private

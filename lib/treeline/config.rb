@@ -1,6 +1,6 @@
 class Treeline
   class Config
-    attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace
+    attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries
 
     def initialize
       if defined? TREELINE_YAML
@@ -19,6 +19,10 @@ class Treeline
 
     def namespace
       @namespace ||= 'treeline'
+    end
+
+    def max_retries
+      @max_retries ||= 5
     end
 
     def redis_config

@@ -34,7 +34,17 @@ describe Treeline::Queue do
       test_item = "Test Queue Item"
       assert_equal 1, @queue.push(test_item)
       data = @queue.pop
-      assert_equal Treeline::Envelope, data.class
+      assert_kind_of Treeline::Envelope, data
+      assert_equal test_item, data.contents
+    end
+
+    it "doesn't wrap an envelope that gets pushed in another envelope" do
+      test_item = "Test Queue Item"
+      env = Treeline::Envelope.new
+      env.contents = test_item
+      assert_equal 1, @queue.push(env)
+      data = @queue.pop
+      assert_kind_of Treeline::Envelope, data
       assert_equal test_item, data.contents
     end
   end
