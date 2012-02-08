@@ -174,6 +174,10 @@ Still to be done:
 - Documentation - need to get YARD docs added so that the API is more completely
   documented. For the time being, though, there are some fairly comprehensive
   test suites.
+- Timing - it would be crazy useful to be able to automatically log per-queue
+  statistics about how long jobs are taking. Definitely something like an "over
+  the last 5 minutes/past 1000 jobs" stat would be useful, but we may also be
+  interested in some kind of lifetime average.
 
 ## Future
 
