@@ -24,7 +24,7 @@ describe Treeline do
   end
 
   it "builds and uses a proper config hash for Redis" do
-    @logger = Logger.new STDOUT
+    @logger = Logger.new STDERR
     Treeline.config do |c|
       c.host = "localhost"
       c.port = 12345
@@ -41,6 +41,7 @@ describe Treeline do
     assert_equal 10, config[:timeout]
     assert_equal "foo", config[:password]
     assert_equal 15, config[:db]
+    assert_equal @logger, config[:logger]
 
     # reset the parameters that, if changed from defaults, cause Redis not to be
     # able to connect
@@ -54,6 +55,7 @@ describe Treeline do
     assert_equal "localhost", redis.client.host
     assert_equal 10, redis.client.timeout
     assert_equal 15, redis.client.db
+    assert_equal @logger, redis.client.logger
 
   end
 end
