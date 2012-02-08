@@ -2,17 +2,9 @@ require 'test_helper'
 
 describe Treeline do
   before do
-    # Reset the singletons
+    # Reset the singleton
     Treeline.redis = nil
-    Treeline.config do |c|
-      c.database = nil
-      c.host = nil
-      c.port = nil
-      c.timeout = nil
-      c.password = nil
-      c.logger = nil
-      c.namespace = nil
-    end
+    Treeline.instance_variable_set("@config", nil)
   end
 
   it "saves a passed-in redis namespace" do

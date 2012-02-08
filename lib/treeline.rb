@@ -27,6 +27,8 @@ class Treeline
     end
 
     def redis
+      # Make sure the configuration is initialized if it isn't already
+      @config ||= Config.new
       if @redis.nil?
         self.redis = Redis.new(@config.redis_config)
       end
