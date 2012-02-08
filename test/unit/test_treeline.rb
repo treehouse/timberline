@@ -42,7 +42,7 @@ describe Treeline do
       c.database = 3 
     end
 
-    assert_equal 3, Treeline::Config.database
+    assert_equal 3, Treeline.instance_variable_get("@config").database
   end
 
   it "uses a pre-defined namespace name if configured" do
@@ -64,7 +64,8 @@ describe Treeline do
       c.logger = @logger
     end
 
-    config = Treeline::Config.redis_config
+    tconf = Treeline.instance_variable_get("@config")
+    config = tconf.redis_config
 
     assert_equal "localhost", config[:host]
     assert_equal 12345, config[:port]
