@@ -38,6 +38,5 @@ class Treeline
       envelope.contents = item
       envelope
     end
-
   end
 end

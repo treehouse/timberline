@@ -55,6 +55,7 @@ describe Treeline::QueueManager do
       assert_kind_of DateTime, DateTime.parse(data.submitted_at)
       assert_equal "test_queue", data.origin_queue
       assert_equal 0, data.retries
+      assert_equal 1, data.job_id
     end
 
     it "allows you to retry a job that has failed" do

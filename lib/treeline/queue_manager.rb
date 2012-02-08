@@ -54,10 +54,15 @@ class Treeline
         env.send("#{key.to_s}=", value)
       end
 
+      env.job_id = next_id_for_queue(metadata[:origin_queue])
       env.retries = 0
       env.submitted_at = DateTime.now
 
       env
+    end
+
+    def next_id_for_queue(queue_name)
+      Treeline.redis.incr "#{queue_name}_id_seq"
     end
 
     # Hacky-hacky. I like the idea of calling retry_job(job) and error_job(job)
