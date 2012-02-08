@@ -11,16 +11,24 @@ require_relative "treeline/envelope"
 class Treeline
   class << self
     def redis=(server)
-      @redis = server
+      if server.is_a? Redis
+        @redis = Redis::Namespace.new(Config.namespace, :redis => server)
+      elsif server.is_a? Redis::Namespace
+        @redis = server
+      elsif server.nil?
+        @redis = nil
+      else
+        raise "Not a valid Redis connection."
+      end
     end
 
     def redis
       if @redis.nil?
         r = Redis.new(Config.redis_config)
         @redis = Redis::Namespace.new(Config.namespace, :redis => r)
-      else
-        @redis
       end
+
+      @redis
     end
 
     def config(&block)

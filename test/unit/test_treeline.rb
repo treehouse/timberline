@@ -15,10 +15,18 @@ describe Treeline do
     end
   end
 
-  it "saves a passed-in redis server" do
+  it "saves a passed-in redis namespace" do
+    redis = Redis.new
+    redisns = Redis::Namespace.new("treeline", redis)
+    Treeline.redis = redisns
+    assert_equal redisns, Treeline.redis
+  end
+
+  it "Converts a standard redis server into a namespace" do
     redis = Redis.new
     Treeline.redis = redis
-    assert_equal redis, Treeline.redis
+    assert_equal Redis::Namespace, Treeline.redis.class
+    assert_equal redis, Treeline.redis.instance_variable_get("@redis")
   end
 
   it "generates a redis namespace on request if one isn't present" do
