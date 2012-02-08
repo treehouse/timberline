@@ -2,7 +2,17 @@ require 'test_helper'
 
 describe Treeline do
   before do
+    # Reset the singletons
     Treeline.redis = nil
+    Treeline.config do |c|
+      c.database = nil
+      c.host = nil
+      c.port = nil
+      c.timeout = nil
+      c.password = nil
+      c.logger = nil
+      c.namespace = nil
+    end
   end
 
   it "saves a passed-in redis server" do
@@ -11,16 +21,28 @@ describe Treeline do
     assert_equal redis, Treeline.redis
   end
 
-  it "generates a redis on request if one isn't present" do
-    assert_equal Redis, Treeline.redis.class
+  it "generates a redis namespace on request if one isn't present" do
+    assert_equal Redis::Namespace, Treeline.redis.class
+  end
+
+  it "uses a default namespace of 'treeline'" do
+    assert_equal "treeline", Treeline.redis.namespace
   end
 
   it "can be configured" do
     Treeline.config do |c|
-      c.database = 15
+      c.database = 3 
     end
 
-    assert_equal 15, Treeline::Config.database
+    assert_equal 3, Treeline::Config.database
+  end
+
+  it "uses a pre-defined namespace name if configured" do
+    Treeline.config do |c|
+      c.namespace = "skyline"
+    end
+
+    assert_equal "skyline", Treeline.redis.namespace
   end
 
   it "builds and uses a proper config hash for Redis" do
