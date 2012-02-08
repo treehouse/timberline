@@ -87,7 +87,7 @@ queue (more on that later). There are 3 ways to configure Treeline:
         password: foobar
 
 3. Like the yaml format but you're not using Rails? Don't worry, just write your
-   yaml file and do the following:
+   yaml file and set the TREELINE\_YAML constant inside your app like so:
 
         TREELINE_YAML = 'path/to/your/yaml/file.yaml'
 
