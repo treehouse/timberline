@@ -15,5 +15,12 @@ class Treeline
 
       config
     end
+
+    def load_from_yaml(filename)
+      yaml_config = YAML.load_file(filename)
+      ["database","host","port","timeout","password","logger","namespace"].each do |setting|
+        self.instance_variable_set("@#{setting}", yaml_config[setting])
+      end
+    end
   end
 end

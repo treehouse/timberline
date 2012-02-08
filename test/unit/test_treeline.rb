@@ -53,39 +53,20 @@ describe Treeline do
     assert_equal "skyline", Treeline.redis.namespace
   end
 
-  it "builds and uses a proper config hash for Redis" do
+  it "properly configures Redis" do
     @logger = Logger.new STDERR
     Treeline.config do |c|
       c.host = "localhost"
-      c.port = 12345
       c.timeout = 10
-      c.password = "foo"
-      c.database = 15
+      c.database = 3 
       c.logger = @logger
-    end
-
-    tconf = Treeline.instance_variable_get("@config")
-    config = tconf.redis_config
-
-    assert_equal "localhost", config[:host]
-    assert_equal 12345, config[:port]
-    assert_equal 10, config[:timeout]
-    assert_equal "foo", config[:password]
-    assert_equal 15, config[:db]
-    assert_equal @logger, config[:logger]
-
-    # reset the parameters that, if changed from defaults, cause Redis not to be
-    # able to connect
-    Treeline.config do |c|
-      c.password = nil
-      c.port = nil
     end
 
     redis = Treeline.redis
 
     assert_equal "localhost", redis.client.host
     assert_equal 10, redis.client.timeout
-    assert_equal 15, redis.client.db
+    assert_equal 3, redis.client.db
     assert_equal @logger, redis.client.logger
 
   end

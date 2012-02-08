@@ -1,5 +1,6 @@
 require 'json'
 require 'logger'
+require 'yaml'
 
 require 'redis'
 require 'redis-namespace'
