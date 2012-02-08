@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require_relative 'treeline'
+
+treeline_file = ARGV[0]
+
+Treeline.class_eval(File.read(treeline_file))
