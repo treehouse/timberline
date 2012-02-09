@@ -51,13 +51,14 @@ class Treeline
       @config.max_retries
     end
 
+    @queue_manager = QueueManager.new
+
     private
     # Don't know if I like doing this, but we want the configuration to be
     # lazy-loaded so as to be sure and give users a chance to set up their
     # configurations.
     def initialize_if_necessary
       @config ||= Config.new
-      @queue_manager ||= QueueManager.new
     end
   end
 

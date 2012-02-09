@@ -7,7 +7,7 @@ class Treeline
         if File.exists?(TREELINE_YAML)
           load_from_yaml(TREELINE_YAML)
         else
-          raise "Specified Treeline config file is not present, check TREELINE_YAML."
+          raise "Specified Treeline config file #{TREELINE_YAML} is not present."
         end
       elsif defined? RAILS_ROOT
         config_file = File.join(RAILS_ROOT, 'config', 'treeline.yaml')
