@@ -143,9 +143,7 @@ queue (its queue name should always be "treeline\_errors").
 ### Using the binary
 
 In order to make reading off of the queue easier, there's a binary named
-`treeline` included with this gem. The binary is currently very simple, as it
-loads in a named file and executes the code in it in the context of the Treeline
-class.
+`treeline` included with this gem. 
 
 Example:
 
@@ -161,14 +159,17 @@ the value of any object put on the queue. If no objects are on the queue it will
 block until either the process is killed, or until something is added to the
 queue.
 
+There are some options to the treeline binary that you may find helpful -
+`treeline --help` for more. 
+
 ## TODO
 
 Still to be done:
 
 - A simple Sinatra interface for monitoring the statuses of queues and
   observing/resubmitting errored-out jobs.
-- Binary updates - the binary should be daemonizable, and should also probably
-  fork processes for each job that it processes so that it's more robust.
+- Binary updates - the binary should probably fork processes for each job 
+  that it tries to process so that it's more robust.
 - DSL improvements - the DSL-ish setup for Treeline could probably use some
   updates to be both more obvious and easier to use.
 - Documentation - need to get YARD docs added so that the API is more completely
