@@ -15,6 +15,17 @@ describe Timberline::Queue do
       assert_equal 0, @queue.length
     end
 
+    it "starts in an unpaused state" do
+      assert_equal false, @queue.paused?
+    end
+
+    it "allows itself to be paused and unpaused" do
+      @queue.pause
+      assert_equal true, @queue.paused?
+      @queue.unpause
+      assert_equal false, @queue.paused?
+    end
+
     it "has a default read_timeout of 0" do
       assert_equal 0, @queue.read_timeout
     end

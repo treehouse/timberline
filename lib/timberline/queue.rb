@@ -13,6 +13,8 @@ class Timberline
     end
 
     def pop
+      block_while_paused
+
       br_tuple = @redis.brpop(@queue_name, read_timeout)
       envelope_string = br_tuple.nil? ? nil : br_tuple[1]
       if envelope_string.nil?
@@ -31,12 +33,34 @@ class Timberline
       end
     end
 
+    def pause
+      @redis[attr("paused")] = "true"
+    end
+
+    def unpause
+      @redis[attr("paused")] = "false"
+    end
+
+    def paused?
+      @redis[attr("paused")] == "true"
+    end
+
     private
+
+    def attr(key)
+      "#{@queue_name}:#{key}"
+    end
 
     def wrap(item)
       envelope = Envelope.new
       envelope.contents = item
       envelope
+    end
+
+    def block_while_paused
+      while(self.paused?)
+        sleep(1)
+      end
     end
   end
 end
