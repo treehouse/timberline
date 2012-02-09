@@ -1,4 +1,4 @@
-class Treeline
+class Timberline
   class Envelope
 
     def self.from_json(json_string)

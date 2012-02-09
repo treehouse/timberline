@@ -1,4 +1,4 @@
-class Treeline
+class Timberline
   class QueueManager
     attr_reader :queue_list
 
@@ -7,7 +7,7 @@ class Treeline
     end
 
     def error_queue
-      @error_queue ||= Queue.new("treeline_errors")
+      @error_queue ||= Queue.new("timberline_errors")
     end
 
     def queue(queue_name)
@@ -23,7 +23,7 @@ class Treeline
     end
 
     def retry_job(job)
-      if (job.retries < Treeline.max_retries)
+      if (job.retries < Timberline.max_retries)
         job.retries += 1
         job.last_tried_at = DateTime.now
         queue(job.origin_queue).push(job)
@@ -62,7 +62,7 @@ class Treeline
     end
 
     def next_id_for_queue(queue_name)
-      Treeline.redis.incr "#{queue_name}_id_seq"
+      Timberline.redis.incr "#{queue_name}_id_seq"
     end
 
     # Hacky-hacky. I like the idea of calling retry_job(job) and error_job(job)
@@ -72,11 +72,11 @@ class Treeline
       binding = block.binding
       binding.eval <<-HERE
         def retry_job(job)
-          Treeline.retry_job(job)
+          Timberline.retry_job(job)
         end
 
         def error_job(job)
-          Treeline.error_job(job)
+          Timberline.error_job(job)
         end
       HERE
     end

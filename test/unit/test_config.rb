@@ -1,9 +1,9 @@
 require 'test_helper'
 
-describe Treeline::Config do
+describe Timberline::Config do
   describe "Without any preset YAML configs" do
     before do
-      @config = Treeline::Config.new
+      @config = Timberline::Config.new
     end
 
     it "builds a proper config hash for Redis" do
@@ -43,7 +43,7 @@ describe Treeline::Config do
   describe "when in a Rails app without a config file" do
     before do
       RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
-      @config = Treeline::Config.new
+      @config = Timberline::Config.new
     end
 
     after do
@@ -60,14 +60,14 @@ describe Treeline::Config do
   describe "when in a Rails app with a config file" do
     before do
       RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
-      @config = Treeline::Config.new
+      @config = Timberline::Config.new
     end
 
     after do
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
-    it "should load the config/treeline.yaml file" do
+    it "should load the config/timberline.yaml file" do
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -77,14 +77,14 @@ describe Treeline::Config do
     end
   end
 
-  describe "when TREELINE_YAML is defined" do
+  describe "when TIMBERLINE_YAML is defined" do
     before do
-      TREELINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
-      @config = Treeline::Config.new
+      TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
+      @config = Timberline::Config.new
     end
 
     after do
-      Object.send(:remove_const, :TREELINE_YAML)
+      Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
     it "should load the specified yaml file" do
@@ -97,18 +97,18 @@ describe Treeline::Config do
     end
   end
 
-  describe "when TREELINE_YAML is defined, but doesn't exist" do
+  describe "when TIMBERLINE_YAML is defined, but doesn't exist" do
     before do
-      TREELINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
+      TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
     end
 
     after do
-      Object.send(:remove_const, :TREELINE_YAML)
+      Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
     it "should raise an exception" do
       assert_raises RuntimeError do 
-        @config = Treeline::Config.new
+        @config = Timberline::Config.new
       end
     end
   end

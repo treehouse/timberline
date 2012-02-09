@@ -1,14 +1,14 @@
 require 'test_helper'
 require 'date'
 
-describe Treeline::Envelope do
+describe Timberline::Envelope do
   before do
-    @envelope = Treeline::Envelope.new
+    @envelope = Timberline::Envelope.new
   end
 
   describe "newly instantiated" do
     it "raises a MissingContentException when to_s is called because the contents are nil" do
-      assert_raises Treeline::MissingContentException do
+      assert_raises Timberline::MissingContentException do
         @envelope.to_s
       end
     end
@@ -59,7 +59,7 @@ describe Treeline::Envelope do
 
     it "parses itself back correctly using from_json" do
       json_string = @envelope.to_s
-      new_envelope = Treeline::Envelope.from_json(json_string)
+      new_envelope = Timberline::Envelope.from_json(json_string)
       assert_equal @envelope.contents, new_envelope.contents
       assert_equal @envelope.metadata, new_envelope.metadata
     end

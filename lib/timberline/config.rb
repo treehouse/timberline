@@ -1,16 +1,16 @@
-class Treeline
+class Timberline
   class Config
     attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries
 
     def initialize
-      if defined? TREELINE_YAML
-        if File.exists?(TREELINE_YAML)
-          load_from_yaml(TREELINE_YAML)
+      if defined? TIMBERLINE_YAML
+        if File.exists?(TIMBERLINE_YAML)
+          load_from_yaml(TIMBERLINE_YAML)
         else
-          raise "Specified Treeline config file #{TREELINE_YAML} is not present."
+          raise "Specified Timberline config file #{TIMBERLINE_YAML} is not present."
         end
       elsif defined? RAILS_ROOT
-        config_file = File.join(RAILS_ROOT, 'config', 'treeline.yaml')
+        config_file = File.join(RAILS_ROOT, 'config', 'timberline.yaml')
         if File.exists?(config_file)
           load_from_yaml(config_file)
         end
@@ -18,7 +18,7 @@ class Treeline
     end
 
     def namespace
-      @namespace ||= 'treeline'
+      @namespace ||= 'timberline'
     end
 
     def max_retries

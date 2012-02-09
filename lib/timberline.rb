@@ -6,13 +6,13 @@ require 'yaml'
 require 'redis'
 require 'redis-namespace'
 
-require_relative "treeline/version"
-require_relative "treeline/config"
-require_relative "treeline/queue"
-require_relative "treeline/envelope"
-require_relative "treeline/queue_manager"
+require_relative "timberline/version"
+require_relative "timberline/config"
+require_relative "timberline/queue"
+require_relative "timberline/envelope"
+require_relative "timberline/queue_manager"
 
-class Treeline
+class Timberline
   class << self
     extend Forwardable
 
@@ -51,8 +51,6 @@ class Treeline
       @config.max_retries
     end
 
-    @queue_manager = QueueManager.new
-
     private
     # Don't know if I like doing this, but we want the configuration to be
     # lazy-loaded so as to be sure and give users a chance to set up their
@@ -63,3 +61,5 @@ class Treeline
   end
 
 end
+
+Timberline.instance_variable_set("@queue_manager", Timberline::QueueManager.new)

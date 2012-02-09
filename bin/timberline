@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require 'daemons'
+require 'trollop'
+
+require 'timberline'
+
+opts = Trollop::options do
+  version "timberline #{Timberline::VERSION} (c) 2012 Tommy Morgan"
+  banner <<-EOS
+The timberline command-line interface allows you to easily start up Timberline queue watchers.
+
+Usage:
+       timberline [options] <filename>
+where [options] are:
+EOS
+
+  opt :daemonize, "Run the queue listener as a daemon", :default => false
+  opt :log_output, "log the output to <filename>.output (only applicable in conjunction with the daemonize option)", :default => false
+  opt :config, "YAML config file to set up Timberline options",
+        :type => String, :default => nil
+end
+
+unless opts[:config].nil?
+  TIMBERLINE_YAML = opts[:config]
+end
+
+timberline_file = ARGV[0]
+timberline_spec = File.read(timberline_file)
+
+if opts[:daemonize]
+  puts "Entering daemon mode"
+  Daemons.daemonize({ :app_name => timberline_file, :log_output => opts[:log_output] })
+end
+
+puts "Listening..."
+Timberline.class_eval(timberline_spec)

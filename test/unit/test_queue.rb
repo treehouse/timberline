@@ -1,10 +1,10 @@
 require 'test_helper'
 
-describe Treeline::Queue do
+describe Timberline::Queue do
   describe "newly instantiated" do
     before do
       clear_test_db
-      @queue = Treeline::Queue.new("test_queue")
+      @queue = Timberline::Queue.new("test_queue")
     end
 
     it "saves the passed-in string as its queue name" do
@@ -34,17 +34,17 @@ describe Treeline::Queue do
       test_item = "Test Queue Item"
       assert_equal 1, @queue.push(test_item)
       data = @queue.pop
-      assert_kind_of Treeline::Envelope, data
+      assert_kind_of Timberline::Envelope, data
       assert_equal test_item, data.contents
     end
 
     it "doesn't wrap an envelope that gets pushed in another envelope" do
       test_item = "Test Queue Item"
-      env = Treeline::Envelope.new
+      env = Timberline::Envelope.new
       env.contents = test_item
       assert_equal 1, @queue.push(env)
       data = @queue.pop
-      assert_kind_of Treeline::Envelope, data
+      assert_kind_of Timberline::Envelope, data
       assert_equal test_item, data.contents
     end
   end
@@ -53,7 +53,7 @@ describe Treeline::Queue do
     before do
       clear_test_db
       @test_item = "Test Queue Item"
-      @queue = Treeline::Queue.new("test_queue")
+      @queue = Timberline::Queue.new("test_queue")
       @queue.push(@test_item)
     end
 

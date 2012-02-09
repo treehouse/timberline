@@ -1,11 +1,11 @@
-class Treeline
+class Timberline
   class Queue
     attr_reader :queue_name, :read_timeout
 
     def initialize(queue_name, read_timeout= 0)
       @queue_name = queue_name
       @read_timeout = read_timeout
-      @redis = Treeline.redis
+      @redis = Timberline.redis
     end
 
     def length

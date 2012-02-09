@@ -1,10 +1,10 @@
 require 'test_helper'
 
-describe Treeline::QueueManager do
+describe Timberline::QueueManager do
   describe "newly instantiated" do
     before do
       clear_test_db
-      @qm = Treeline::QueueManager.new
+      @qm = Timberline::QueueManager.new
     end
 
     it "has an empty queue list" do
@@ -12,13 +12,13 @@ describe Treeline::QueueManager do
     end
 
     it "instantiates an error_queue" do
-      assert_kind_of Treeline::Queue, @qm.error_queue
-      assert_equal "treeline_errors", @qm.error_queue.queue_name
+      assert_kind_of Timberline::Queue, @qm.error_queue
+      assert_equal "timberline_errors", @qm.error_queue.queue_name
     end
 
     it "creates a new queue when asked if it doesn't exist" do
       queue = @qm.queue("test_queue")
-      assert_kind_of Treeline::Queue, queue
+      assert_kind_of Timberline::Queue, queue
       assert_equal 1, @qm.queue_list.size
       assert_equal queue, @qm.queue_list["test_queue"]
     end
