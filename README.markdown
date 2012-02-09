@@ -95,6 +95,7 @@ queue (more on that later). There are 3 ways to configure Treeline:
 
 To push a job onto the queue you'll want to make use of the `Treeline#push`
 method, like so:
+
     Treeline.push "queue_name", data, { :other_data => some_stuff }
 
 `queue_name` is the name of the queue you want to push data onto; data is the
