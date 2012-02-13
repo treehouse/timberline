@@ -23,6 +23,14 @@ describe Timberline::QueueManager do
       assert_equal queue, @qm.queue_list["test_queue"]
     end
 
+    it "logs the existence of the queue so that other managers can see it" do
+      queue = @qm.queue("test_queue")
+      qm2 = Timberline::QueueManager.new
+      all_queues = qm2.all_queues
+      assert_equal 1, qm2.all_queues.size
+      assert_equal "test_queue", qm2.all_queues.first.queue_name
+    end
+
     it "doesn't create a new queue if a queue by the same name already exists" do
       queue = @qm.queue("test_queue")
       new_queue = @qm.queue("test_queue")
@@ -97,54 +105,6 @@ describe Timberline::QueueManager do
       data = queue.pop
 
       @qm.error_job(data)
-      assert_equal 1, @qm.error_queue.length
-      data = @qm.error_queue.pop
-      assert_kind_of DateTime, DateTime.parse(data.fatal_error_at)
-    end
-
-    it "will allow you to watch a queue" do
-      @qm.push("test_queue", "Howdy kids.")
-      
-      assert_raises RuntimeError do
-        @qm.watch "test_queue" do |job|
-          if "Howdy kids." == job.contents
-            raise "This works."
-          end
-        end
-      end
-
-      assert_equal 0, @qm.queue("test_queue").length
-    end
-
-    it "will allow you to retry from a queue watcher" do
-      @qm.push("test_queue", "Howdy kids.")
-
-      assert_raises RuntimeError do
-        @qm.watch "test_queue" do |job|
-          if "Howdy kids." == job.contents
-            retry_job job
-            raise "Job retried."
-          end
-        end
-      end
-
-      assert_equal 1, @qm.queue("test_queue").length
-      data = @qm.queue("test_queue").pop
-      assert_equal 1, data.retries
-    end
-
-    it "will allow you to error from a queue watcher" do
-      @qm.push("test_queue", "Howdy kids.")
-
-      assert_raises RuntimeError do
-        @qm.watch "test_queue" do |job|
-          if "Howdy kids." == job.contents
-            error_job job
-            raise "Job errored."
-          end
-        end
-      end
-
       assert_equal 1, @qm.error_queue.length
       data = @qm.error_queue.pop
       assert_kind_of DateTime, DateTime.parse(data.fatal_error_at)
