@@ -116,6 +116,7 @@ class Timberline
         rescue ItemErrored
           queue.add_error_stat(item)
         else
+          item.finished_processing_at = Time.now.to_f
           queue.add_success_stat(item)
         end
       end

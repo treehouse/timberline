@@ -70,6 +70,12 @@ class Timberline
       Timberline.redis.xcard attr("success_stats")
     end
 
+    def average_execution_time
+      successes = Timberline.redis.xmembers(attr("success_stats")).map { |item| Envelope.from_json(item)}
+      times = successes.map { |item| item.finished_processing_at.to_f - item.started_processing_at.to_f }
+      times.inject(0, :+) / times.size.to_f
+    end
+
     def add_retry_stat(item)
       add_stat_for_key(attr("retry_stats"), item)
     end
