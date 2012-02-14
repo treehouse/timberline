@@ -1,6 +1,6 @@
 class Timberline
   class Config
-    attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries
+    attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries, :stat_timeout
 
     def initialize
       if defined? TIMBERLINE_YAML
@@ -15,14 +15,11 @@ class Timberline
           load_from_yaml(config_file)
         end
       end
-    end
 
-    def namespace
-      @namespace ||= 'timberline'
-    end
-
-    def max_retries
+      # load defaults
+      @namespace  ||= 'timberline'
       @max_retries ||= 5
+      @stat_timeout ||= 60
     end
 
     def redis_config

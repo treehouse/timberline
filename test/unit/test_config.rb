@@ -1,12 +1,12 @@
 require 'test_helper'
 
-describe Timberline::Config do
-  describe "Without any preset YAML configs" do
-    before do
+class ConfigTest < Test::Unit::TestCase
+  context "Without any preset YAML configs" do
+    setup do
       @config = Timberline::Config.new
     end
 
-    it "builds a proper config hash for Redis" do
+    should "build a proper config hash for Redis" do
       @logger = Logger.new STDERR
 
       @config.host = "localhost"
@@ -27,7 +27,7 @@ describe Timberline::Config do
 
     end
 
-    it "reads configuration from a YAML config file" do
+    should "reads configuration from a YAML config file" do
       base_dir = File.dirname(File.path(__FILE__))
       yaml_file = File.join(base_dir, "..", "test_config.yaml")
       @config.load_from_yaml(yaml_file)
@@ -40,34 +40,39 @@ describe Timberline::Config do
     end
   end
 
-  describe "when in a Rails app without a config file" do
-    before do
-      RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
+  context "when in a Rails app without a config file" do
+    setup do
+      Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
       @config = Timberline::Config.new
     end
 
-    after do
+    teardown do
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
-    it "should load successfully without any configs." do
-      ["database","host","port","timeout","password","logger","namespace"].each do |setting|
+    should "load successfully without any configs." do
+      ["database","host","port","timeout","password","logger"].each do |setting|
         assert_equal nil, @config.instance_variable_get("@#{setting}")
       end
+
+      # check defaults
+      assert_equal "timberline", @config.namespace
+      assert_equal 5, @config.max_retries
+      assert_equal 60, @config.stat_timeout
     end
   end
 
-  describe "when in a Rails app with a config file" do
-    before do
-      RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
+  context "when in a Rails app with a config file" do
+    setup do
+      Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
       @config = Timberline::Config.new
     end
 
-    after do
+    teardown do
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
-    it "should load the config/timberline.yaml file" do
+    should "load the config/timberline.yaml file" do
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -77,17 +82,17 @@ describe Timberline::Config do
     end
   end
 
-  describe "when TIMBERLINE_YAML is defined" do
-    before do
-      TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
+  context "when TIMBERLINE_YAML is defined" do
+    setup do
+      Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
       @config = Timberline::Config.new
     end
 
-    after do
+    teardown do
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
-    it "should load the specified yaml file" do
+    should "load the specified yaml file" do
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -97,16 +102,16 @@ describe Timberline::Config do
     end
   end
 
-  describe "when TIMBERLINE_YAML is defined, but doesn't exist" do
-    before do
-      TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
+  context "when TIMBERLINE_YAML is defined, but doesn't exist" do
+    setup do
+      Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
     end
 
-    after do
+    teardown do
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
-    it "should raise an exception" do
+    should "raise an exception" do
       assert_raises RuntimeError do 
         @config = Timberline::Config.new
       end
