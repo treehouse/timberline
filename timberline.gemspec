@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "trollop"
   s.add_runtime_dependency "daemons"
 
-  s.add_development_dependency "shoulda"
+  s.add_development_dependency "nutrasuite"
 end

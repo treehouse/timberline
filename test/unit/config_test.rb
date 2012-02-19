@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class ConfigTest < Test::Unit::TestCase
-  context "Without any preset YAML configs" do
+  a "Config object without any preset YAML configs" do
     setup do
       @config = Timberline::Config.new
     end
 
-    should "build a proper config hash for Redis" do
+    it "builds a proper config hash for Redis" do
       @logger = Logger.new STDERR
 
       @config.host = "localhost"
@@ -27,7 +27,7 @@ class ConfigTest < Test::Unit::TestCase
 
     end
 
-    should "reads configuration from a YAML config file" do
+    it "reads configuration from a YAML config file" do
       base_dir = File.dirname(File.path(__FILE__))
       yaml_file = File.join(base_dir, "..", "test_config.yaml")
       @config.load_from_yaml(yaml_file)
@@ -40,7 +40,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  context "when in a Rails app without a config file" do
+  a "Config object in a Rails app without a config file" do
     setup do
       Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
       @config = Timberline::Config.new
@@ -50,7 +50,7 @@ class ConfigTest < Test::Unit::TestCase
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
-    should "load successfully without any configs." do
+    it "loads successfully without any configs." do
       ["database","host","port","timeout","password","logger"].each do |setting|
         assert_equal nil, @config.instance_variable_get("@#{setting}")
       end
@@ -62,7 +62,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  context "when in a Rails app with a config file" do
+  a "Config object in a Rails app with a config file" do
     setup do
       Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
       @config = Timberline::Config.new
@@ -72,7 +72,7 @@ class ConfigTest < Test::Unit::TestCase
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
-    should "load the config/timberline.yaml file" do
+    it "loads the config/timberline.yaml file" do
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -82,7 +82,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  context "when TIMBERLINE_YAML is defined" do
+  a "Config object when TIMBERLINE_YAML is defined" do
     setup do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
       @config = Timberline::Config.new
@@ -92,7 +92,7 @@ class ConfigTest < Test::Unit::TestCase
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
-    should "load the specified yaml file" do
+    it "loads the specified yaml file" do
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -102,7 +102,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  context "when TIMBERLINE_YAML is defined, but doesn't exist" do
+  a "Config object when TIMBERLINE_YAML is defined, but doesn't exist" do
     setup do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
     end
@@ -111,7 +111,7 @@ class ConfigTest < Test::Unit::TestCase
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
-    should "raise an exception" do
+    it "raises an exception" do
       assert_raises RuntimeError do 
         @config = Timberline::Config.new
       end

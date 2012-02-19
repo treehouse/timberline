@@ -1,6 +1,6 @@
 require 'test/unit'
 
-require 'shoulda'
+require 'nutrasuite'
 
 # include the gem
 require 'timberline'
