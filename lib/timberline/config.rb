@@ -14,6 +14,11 @@ class Timberline
         if File.exists?(config_file)
           load_from_yaml(config_file)
         end
+      elsif defined? Rails.root
+        config_file = File.join(Rails.root, 'config', 'timberline.yaml')
+        if File.exists?(config_file)
+          load_from_yaml(config_file)
+        end
       end
 
       # load defaults
