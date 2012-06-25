@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ConfigTest < Test::Unit::TestCase
   a "Config object without any preset YAML configs" do
-    setup do
+    before do
       @config = Timberline::Config.new
     end
 
@@ -41,12 +41,12 @@ class ConfigTest < Test::Unit::TestCase
   end
 
   a "Config object in a Rails app without a config file" do
-    setup do
+    before do
       Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
       @config = Timberline::Config.new
     end
 
-    teardown do
+    after do
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
@@ -63,12 +63,12 @@ class ConfigTest < Test::Unit::TestCase
   end
 
   a "Config object in a Rails app with a config file" do
-    setup do
+    before do
       Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
       @config = Timberline::Config.new
     end
 
-    teardown do
+    after do
       Object.send(:remove_const, :RAILS_ROOT)
     end
 
@@ -83,12 +83,12 @@ class ConfigTest < Test::Unit::TestCase
   end
 
   a "Config object when TIMBERLINE_YAML is defined" do
-    setup do
+    before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
       @config = Timberline::Config.new
     end
 
-    teardown do
+    after do
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 
@@ -103,11 +103,11 @@ class ConfigTest < Test::Unit::TestCase
   end
 
   a "Config object when TIMBERLINE_YAML is defined, but doesn't exist" do
-    setup do
+    before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
     end
 
-    teardown do
+    after do
       Object.send(:remove_const, :TIMBERLINE_YAML)
     end
 

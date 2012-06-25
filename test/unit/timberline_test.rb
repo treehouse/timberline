@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TimberlineTest < Test::Unit::TestCase
   a "Freshly set up Timberline" do
-    setup do
+    before do
       reset_timberline
     end
 

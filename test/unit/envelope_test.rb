@@ -4,7 +4,7 @@ require 'date'
 class EnvelopeTest < Test::Unit::TestCase
 
   a "newly instantiated Envelope object" do
-    setup do
+    before do
       @envelope = Timberline::Envelope.new
     end
 
@@ -30,7 +30,7 @@ class EnvelopeTest < Test::Unit::TestCase
   end
 
   an "Envelope object with contents" do
-    setup do
+    before do
       @envelope = Timberline::Envelope.new
       @envelope.contents = "Test data"
     end

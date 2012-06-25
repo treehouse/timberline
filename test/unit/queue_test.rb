@@ -2,7 +2,7 @@ require 'test_helper'
 
 class QueueTest < Test::Unit::TestCase
   a "newly instantiated Queue" do
-    setup do
+    before do
       clear_test_db
       @queue = Timberline::Queue.new("test_queue")
     end
@@ -89,7 +89,7 @@ class QueueTest < Test::Unit::TestCase
   end
 
   a "Queue with one item" do
-    setup do
+    before do
       clear_test_db
       @test_item = "Test Queue Item"
       @queue = Timberline::Queue.new("test_queue")
