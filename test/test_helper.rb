@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'ostruct'
 
 require 'nutrasuite'
 

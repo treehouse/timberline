@@ -5,19 +5,17 @@ class Timberline
     def initialize
       if defined? TIMBERLINE_YAML
         if File.exists?(TIMBERLINE_YAML)
-          load_from_yaml(TIMBERLINE_YAML)
+          yaml = YAML.load_file(TIMBERLINE_YAML)
+          load_from_yaml(yaml)
         else
           raise "Specified Timberline config file #{TIMBERLINE_YAML} is not present."
-        end
-      elsif defined? RAILS_ROOT
-        config_file = File.join(RAILS_ROOT, 'config', 'timberline.yaml')
-        if File.exists?(config_file)
-          load_from_yaml(config_file)
         end
       elsif defined? Rails.root
         config_file = File.join(Rails.root, 'config', 'timberline.yaml')
         if File.exists?(config_file)
-          load_from_yaml(config_file)
+          configs = YAML.load_file(config_file)
+          config = configs[Rails.env]
+          load_from_yaml(config)
         end
       end
 
@@ -37,8 +35,8 @@ class Timberline
       config
     end
 
-    def load_from_yaml(filename)
-      yaml_config = YAML.load_file(filename)
+    def load_from_yaml(yaml_config)
+      raise "Missing yaml configs!" if yaml_config.nil?
       ["database","host","port","timeout","password","logger","namespace"].each do |setting|
         self.instance_variable_set("@#{setting}", yaml_config[setting])
       end

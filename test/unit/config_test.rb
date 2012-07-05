@@ -30,7 +30,9 @@ class ConfigTest < Test::Unit::TestCase
     it "reads configuration from a YAML config file" do
       base_dir = File.dirname(File.path(__FILE__))
       yaml_file = File.join(base_dir, "..", "test_config.yaml")
-      @config.load_from_yaml(yaml_file)
+      config = YAML.load_file(yaml_file)
+
+      @config.load_from_yaml(config)
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -42,12 +44,12 @@ class ConfigTest < Test::Unit::TestCase
 
   a "Config object in a Rails app without a config file" do
     before do
-      Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "gibberish")
+      Object::Rails = OpenStruct.new(:root => File.join(File.dirname(File.path(__FILE__)), "..", "gibberish"), :env => "development")
       @config = Timberline::Config.new
     end
 
     after do
-      Object.send(:remove_const, :RAILS_ROOT)
+      Object.send(:remove_const, :Rails)
     end
 
     it "loads successfully without any configs." do
@@ -64,12 +66,12 @@ class ConfigTest < Test::Unit::TestCase
 
   a "Config object in a Rails app with a config file" do
     before do
-      Object::RAILS_ROOT = File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails")
+      Object::Rails = OpenStruct.new(:root => File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails"), :env => "development")
       @config = Timberline::Config.new
     end
 
     after do
-      Object.send(:remove_const, :RAILS_ROOT)
+      Object.send(:remove_const, :Rails)
     end
 
     it "loads the config/timberline.yaml file" do
