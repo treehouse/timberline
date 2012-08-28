@@ -86,6 +86,8 @@ class Timberline
 
     def add_success_stat(item)
       add_stat_for_key(attr("success_stats"), item)
+    rescue Exception => e
+      $stderr.puts "Success Stat Error: #{e.inspect}, Item: #{item.inspect}"
     end
 
     private
