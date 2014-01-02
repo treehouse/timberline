@@ -95,6 +95,10 @@ queue (more on that later). There are 4 ways to configure Timberline:
 
 4. Running on Heroku? Define an environment variable for the URL:
 
+        export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1"
+
+   You can optionally use `REDIS_URL` instead:
+
         export REDIS_URL="redis://:foobar@192.168.1.105:12345/1"
 
    You can also specify the namespace via environment variables too:
