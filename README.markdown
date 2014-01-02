@@ -60,7 +60,7 @@ There are a few things that you probably want to be able to configure in
 Timberline. At the moment this is largely stuff related to the redis server
 connection, but you can also configure a namespace for your redis queues
 (defaults to "timberline") and a maximum number of retry attempts for jobs in the
-queue (more on that later). There are 3 ways to configure Timberline:
+queue (more on that later). There are 4 ways to configure Timberline:
 
 1. The most direct way is to configure Timberline via ruby code as follows:
 
@@ -70,7 +70,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
           c.port = 12345
           c.password = "foobar"
         end
-   
+
    ...As long as you run this block before you attempt to access your queues,
    your settings will all take effect. Redis defaults will be used if you omit
    anything.
@@ -78,18 +78,28 @@ queue (more on that later). There are 3 ways to configure Timberline:
 2. If you're including Timberline in a Rails app, there's a convenient way to
    configure it that should fit in with the rest of your app - if you include a
    yaml file named timberline.yaml in your config directory, Timberline will
-   automatically detect it and load it up. The syntax for this file is
-   shockingly boring:
+   automatically detect it and load it up. Note that you will have to separate
+   each section by Rails environment, similar to your database.yml file. The
+   syntax for this file is shockingly boring:
 
-        database: 1
-        host: 192.168.1.105
-        port: 12345
-        password: foobar
+        development:
+          database: 1
+          host: 192.168.1.105
+          port: 12345
+          password: foobar
 
 3. Like the yaml format but you're not using Rails? Don't worry, just write your
    yaml file and set the TIMBERLINE\_YAML constant inside your app like so:
 
         TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
+
+4. Running on Heroku? Define an environment variable for the URL:
+
+        export REDIS_URL="redis://:foobar@192.168.1.105:12345/1"
+
+   You can also specify the namespace via environment variables too:
+
+        export TIMBERLINE_NAMESPACE=awesome
 
 ### Pushing jobs onto a queue
 
