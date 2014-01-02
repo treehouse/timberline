@@ -20,8 +20,8 @@ class Timberline
       end
 
       # load defaults
-      @url = timberline_env_vars
-      @namespace  ||= 'timberline'
+      @url = timberline_env_url
+      @namespace  ||= ENV['TIMBERLINE_NAMESPACE'] || 'timberline'
       @max_retries ||= 5
       @stat_timeout ||= 60
     end
@@ -45,7 +45,7 @@ class Timberline
 
     private
 
-    def timberline_env_vars
+    def timberline_env_url
       ENV['TIMBERLINE_URL'] || ENV['REDIS_URL']
     end
   end
