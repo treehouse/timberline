@@ -84,6 +84,28 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
+  a "Config object when TIMBERLIBE_YAML is defined" do
+    before do
+      Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
+      ENV['TIMBERLINE_URL'] = 'redis://bar:foo@localhost:12345/3'
+      @config = Timberline::Config.new
+    end
+
+    after do
+      Object.send(:remove_const, :TIMBERLINE_YAML)
+    end
+
+    it "loads the specified yaml file" do
+      assert_equal "redis://localhost:12345", @config.url
+      assert_equal "localhost", @config.host
+      assert_equal 12345, @config.port
+      assert_equal 10, @config.timeout
+      assert_equal "foo", @config.password
+      assert_equal 3, @config.database
+      assert_equal "treecurve", @config.namespace
+    end
+  end
+
   a "Config object when TIMBERLINE_YAML is defined" do
     before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
