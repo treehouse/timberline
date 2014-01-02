@@ -93,6 +93,7 @@ class ConfigTest < Test::Unit::TestCase
 
     after do
       Object.send(:remove_const, :TIMBERLINE_YAML)
+      ENV['TIMBERLINE_URL'] = nil
     end
 
     it "loads the specified yaml file" do
