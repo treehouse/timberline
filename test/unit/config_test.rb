@@ -87,7 +87,7 @@ class ConfigTest < Test::Unit::TestCase
   a "Config object when TIMBERLIBE_YAML is defined" do
     before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
-      ENV['TIMBERLINE_URL'] = 'redis://bar:foo@localhost:12345/3'
+      ENV['TIMBERLINE_URL'] = 'redis://:foo@localhost:12345/3'
       @config = Timberline::Config.new
     end
 
