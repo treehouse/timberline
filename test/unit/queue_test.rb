@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class QueueTest < Test::Unit::TestCase
   a "newly instantiated Queue" do

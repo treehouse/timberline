@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class ConfigTest < Test::Unit::TestCase
   a "Config object without any preset YAML configs" do

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class TimberlineTest < Test::Unit::TestCase
   a "Freshly set up Timberline" do
