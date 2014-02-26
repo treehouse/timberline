@@ -1,9 +1,8 @@
 require_relative '../test_helper'
 require 'date'
 
-class EnvelopeTest < Test::Unit::TestCase
-
-  a "newly instantiated Envelope object" do
+describe Timberline::Envelope do
+  describe "newly instantiated" do
     before do
       @envelope = Timberline::Envelope.new
     end
@@ -29,7 +28,7 @@ class EnvelopeTest < Test::Unit::TestCase
     end
   end
 
-  an "Envelope object with contents" do
+  describe "with contents" do
     before do
       @envelope = Timberline::Envelope.new
       @envelope.contents = "Test data"

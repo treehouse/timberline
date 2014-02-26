@@ -1,7 +1,7 @@
 require_relative '../test_helper'
 
-class ConfigTest < Test::Unit::TestCase
-  a "Config object without any preset YAML configs" do
+describe Timberline::Config do
+  describe "without any preset YAML configs" do
     before do
       @config = Timberline::Config.new
     end
@@ -42,7 +42,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  a "Config object in a Rails app without a config file" do
+  describe "in a Rails app without a config file" do
     before do
       Object::Rails = OpenStruct.new(:root => File.join(File.dirname(File.path(__FILE__)), "..", "gibberish"), :env => "development")
       @config = Timberline::Config.new
@@ -64,7 +64,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  a "Config object in a Rails app with a config file" do
+  describe "in a Rails app with a config file" do
     before do
       Object::Rails = OpenStruct.new(:root => File.join(File.dirname(File.path(__FILE__)), "..", "fake_rails"), :env => "development")
       @config = Timberline::Config.new
@@ -84,7 +84,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  a "Config object when TIMBERLIBE_YAML is defined" do
+  describe "when TIMBERLINE_YAML is defined" do
     before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
       ENV['TIMBERLINE_URL'] = 'redis://:foo@localhost:12345/3'
@@ -97,7 +97,7 @@ class ConfigTest < Test::Unit::TestCase
     end
 
     it "loads the specified yaml file" do
-      assert_equal "redis://localhost:12345", @config.url
+      assert_equal "redis://:foo@localhost:12345/3", @config.url
       assert_equal "localhost", @config.host
       assert_equal 12345, @config.port
       assert_equal 10, @config.timeout
@@ -107,7 +107,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  a "Config object when TIMBERLINE_YAML is defined" do
+  describe "when TIMBERLINE_YAML is defined" do
     before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "test_config.yaml")
       @config = Timberline::Config.new
@@ -127,7 +127,7 @@ class ConfigTest < Test::Unit::TestCase
     end
   end
 
-  a "Config object when TIMBERLINE_YAML is defined, but doesn't exist" do
+  describe "when TIMBERLINE_YAML is defined, but doesn't exist" do
     before do
       Object::TIMBERLINE_YAML = File.join(File.dirname(File.path(__FILE__)), "..", "fake_config.yaml")
     end

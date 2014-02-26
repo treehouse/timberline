@@ -1,7 +1,7 @@
 require_relative '../test_helper'
 
-class QueueTest < Test::Unit::TestCase
-  a "newly instantiated Queue" do
+describe Timberline::Queue do
+  describe "newly instantiated" do
     before do
       clear_test_db
       @queue = Timberline::Queue.new("test_queue")
@@ -88,7 +88,7 @@ class QueueTest < Test::Unit::TestCase
 
   end
 
-  a "Queue with one item" do
+  describe "with one item" do
     before do
       clear_test_db
       @test_item = "Test Queue Item"
