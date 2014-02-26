@@ -1,7 +1,7 @@
-require 'test_helper'
+require_relative '../test_helper'
 
-class TimberlineTest < Test::Unit::TestCase
-  a "Freshly set up Timberline" do
+describe Timberline do
+  describe "Freshly set up" do
     before do
       reset_timberline
     end

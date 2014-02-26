@@ -1,7 +1,5 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'ostruct'
-
-require 'nutrasuite'
 
 # include the gem
 require 'timberline'

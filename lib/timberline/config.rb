@@ -1,6 +1,6 @@
 class Timberline
   class Config
-    attr_accessor :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries, :stat_timeout
+    attr_accessor :url, :database, :host, :port, :timeout, :password, :logger, :namespace, :max_retries, :stat_timeout
 
     def initialize
       if defined? TIMBERLINE_YAML
@@ -20,7 +20,8 @@ class Timberline
       end
 
       # load defaults
-      @namespace  ||= 'timberline'
+      @url = timberline_env_url
+      @namespace  ||= ENV['TIMBERLINE_NAMESPACE'] || 'timberline'
       @max_retries ||= 5
       @stat_timeout ||= 60
     end
@@ -28,7 +29,7 @@ class Timberline
     def redis_config
       config = {}
 
-      { :db => database, :host => host, :port => port, :timeout => timeout, :password => password, :logger => logger }.each do |name, value|
+      { :url => url, :db => database, :host => host, :port => port, :timeout => timeout, :password => password, :logger => logger }.each do |name, value|
         config[name] = value unless value.nil?
       end
 
@@ -40,6 +41,12 @@ class Timberline
       ["database","host","port","timeout","password","logger","namespace"].each do |setting|
         self.instance_variable_set("@#{setting}", yaml_config[setting])
       end
+    end
+
+    private
+
+    def timberline_env_url
+      ENV['TIMBERLINE_URL'] || ENV['REDIS_URL']
     end
   end
 end
