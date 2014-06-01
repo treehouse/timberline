@@ -14,6 +14,7 @@ require_relative "timberline/envelope"
 class Timberline
   class << self
     attr_reader :config
+    attr_accessor :watch_proc
   end
 
   def self.redis=(server)
@@ -47,10 +48,7 @@ class Timberline
   end
 
   def self.queue(queue_name)
-    if @queue_list[queue_name].nil?
-      @queue_list[queue_name] = Queue.new(queue_name)
-    end
-    @queue_list[queue_name]
+    Queue.new(queue_name)
   end
 
   def self.push(queue_name, data, metadata={})
@@ -62,7 +60,6 @@ class Timberline
       item.retries += 1
       item.last_tried_at = Time.now.to_f
       queue(item.origin_queue).push(item)
-      raise ItemRetried
     else
       error_item(item)
     end
@@ -71,7 +68,6 @@ class Timberline
   def self.error_item(item)
     item.fatal_error_at = Time.now.to_f
     error_queue.push(item)
-    raise ItemErrored
   end
 
   def self.pause(queue_name)
@@ -82,7 +78,7 @@ class Timberline
     queue(queue_name).unpause
   end
 
-  def self.config(&block)
+  def self.configure(&block)
     initialize_if_necessary
     yield @config
   end
@@ -104,7 +100,7 @@ class Timberline
 
   def self.watch(queue_name, &block)
     queue = queue(queue_name)
-    while(true)
+    while(self.watch?)
       item = queue.pop
       fix_binding(block)
       item.started_processing_at = Time.now.to_f
@@ -122,7 +118,8 @@ class Timberline
     end
   end
 
-  private def self.initialize_if_necessary
+  private
+  def self.initialize_if_necessary
     @config ||= Config.new
   end
 
@@ -130,7 +127,7 @@ class Timberline
   # error_item(item)
   # directly from the watch block, but this seems ugly. There may be a better
   # way to do this.
-  private def self.fix_binding(block)
+  def self.fix_binding(block)
     binding = block.binding
     binding.eval <<-HERE
       def retry_item(item)
@@ -145,11 +142,13 @@ class Timberline
     HERE
   end
 
+  def self.watch?
+    watch_proc.nil? ? true : watch_proc.call
+  end
+
   class ItemRetried < Exception
   end
 
   class ItemErrored < Exception
   end
 end
-
-Timberline.instance_variable_set("@queue_list", {})
