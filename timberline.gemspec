@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "trollop"
   s.add_runtime_dependency "daemons"
 
+  s.add_development_dependency "rake"
   s.add_development_dependency "rspec", '~> 3.0.0.rc1'
   s.add_development_dependency "pry"
 end
