@@ -64,7 +64,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
 
 1. The most direct way is to configure Timberline via ruby code as follows:
 
-        Timberline.config do |c|
+        Timberline.configure do |c|
           c.database = 1
           c.host = "192.168.1.105"
           c.port = 12345
@@ -81,10 +81,13 @@ queue (more on that later). There are 3 ways to configure Timberline:
    automatically detect it and load it up. The syntax for this file is
    shockingly boring:
 
-        database: 1
-        host: 192.168.1.105
-        port: 12345
-        password: foobar
+        development:
+          database: 1
+          host: 192.168.1.105
+          port: 12345
+          password: foobar
+        production:
+          ...etc.
 
 3. Like the yaml format but you're not using Rails? Don't worry, just write your
    yaml file and set the TIMBERLINE\_YAML constant inside your app like so:
@@ -205,7 +208,7 @@ should probably change, but it probably won't until someone needs it to.
 Gem requirements/etc. should be handled by Bundler.
 
 ## License
-Copyright (C) 2012 by Tommy Morgan
+Copyright (C) 2014 by Tommy Morgan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
