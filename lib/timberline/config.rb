@@ -35,6 +35,7 @@ class Timberline
       config
     end
 
+  private
     def load_from_yaml(yaml_config)
       raise "Missing yaml configs!" if yaml_config.nil?
       ["database","host","port","timeout","password","logger","namespace"].each do |setting|
