@@ -20,7 +20,7 @@ class Timberline
   def self.redis=(server)
     initialize_if_necessary
     if server.is_a? Redis
-      @redis = Redis::Namespace.new(@config.namespace, :redis => server)
+      @redis = Redis::Namespace.new(@config.namespace, redis: server)
     elsif server.is_a? Redis::Namespace
       @redis = server
     elsif server.nil?

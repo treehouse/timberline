@@ -15,10 +15,10 @@ Usage:
 where [options] are:
 EOS
 
-  opt :daemonize, "Run the queue listener as a daemon", :default => false
-  opt :log_output, "log the output to <filename>.output (only applicable in conjunction with the daemonize option)", :default => false
+  opt :daemonize, "Run the queue listener as a daemon", default: false
+  opt :log_output, "log the output to <filename>.output (only applicable in conjunction with the daemonize option)", default: false
   opt :config, "YAML config file to set up Timberline options",
-        :type => String, :default => nil
+        type: String, default: nil
 end
 
 unless opts[:config].nil?
@@ -30,7 +30,7 @@ timberline_spec = File.read(timberline_file)
 
 if opts[:daemonize]
   puts "Entering daemon mode"
-  Daemons.daemonize({ :app_name => timberline_file, :log_output => opts[:log_output] })
+  Daemons.daemonize({ app_name: timberline_file, log_output: opts[:log_output] })
 end
 
 puts "Listening..."

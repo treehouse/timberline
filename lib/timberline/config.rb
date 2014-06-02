@@ -28,7 +28,7 @@ class Timberline
     def redis_config
       config = {}
 
-      { :db => database, :host => host, :port => port, :timeout => timeout, :password => password, :logger => logger }.each do |name, value|
+      { db: database, host: host, port: port, timeout: timeout, password: password, logger: logger }.each do |name, value|
         config[name] = value unless value.nil?
       end
 

@@ -101,7 +101,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
 To push a job onto the queue you'll want to make use of the `Timberline#push`
 method, like so:
 
-    Timberline.push "queue_name", data, { :other_data => some_stuff }
+    Timberline.push "queue_name", data, { other_data: some_stuff }
 
 `queue_name` is the name of the queue you want to push data onto; data is the
 data you want to push onto the queue (remember that this all gets converted to

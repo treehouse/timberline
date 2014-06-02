@@ -33,7 +33,7 @@ class Timberline
     private
 
     def build_envelope_hash
-      { :contents => contents }.merge(@metadata)
+      { contents: contents }.merge(@metadata)
     end
 
     def assign_var(name, value)
