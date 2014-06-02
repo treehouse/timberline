@@ -3,13 +3,16 @@ class Timberline
     attr_reader :queue_name, :read_timeout
 
     def initialize(queue_name, read_timeout= 0)
+      if queue_name.nil?
+        raise ArgumentError.new("Queue name must be provided.")
+      end
       @queue_name = queue_name
       @read_timeout = read_timeout
       @redis = Timberline.redis
       @redis.sadd "timberline_queue_names", queue_name
     end
 
-    def delete!
+    def delete
       @redis.del @queue_name
       @redis.keys("#{@queue_name}:*").each do |key|
         @redis.del key
