@@ -1,5 +1,7 @@
 # Timberline
 
+![](https://travis-ci.org/treehouse/timberline.svg)
+
 ## Purpose
 
 Timberline is a dead-simple queuing service written in Ruby and backed by Redis.
