@@ -75,8 +75,21 @@ class Timberline
 
     def average_execution_time
       successes = Timberline.redis.xmembers(attr("success_stats")).map { |item| Envelope.from_json(item)}
-      times = successes.map { |item| item.finished_processing_at.to_f - item.started_processing_at.to_f }
-      times.inject(0, :+) / times.size.to_f
+      times = successes.map do |item|
+        if item.finished_processing_at
+          item.finished_processing_at.to_f - item.started_processing_at.to_f
+        elsif item.fatal_error_at
+          item.fatal_error_at.to_f - item.started_processing_at.to_f
+        else
+          nil
+        end
+      end
+      times.reject! { |t| t.nil? }
+      if times.size == 0
+        0
+      else
+        times.inject(0, :+) / times.size.to_f
+      end
     end
 
     def add_retry_stat(item)
