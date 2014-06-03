@@ -172,19 +172,17 @@ There are some options to the Timberline binary that you may find helpful -
 
 Still to be done:
 
-- A simple Sinatra interface for monitoring the statuses of queues and
+- **Monitor** - A simple Sinatra interface for monitoring the statuses of queues and
   observing/resubmitting errored-out jobs.
-- Binary updates - the binary should probably fork processes for each job 
-  that it tries to process so that it's more robust.
-- DSL improvements - the DSL-ish setup for Timberline could probably use some
-  updates to be both more obvious and easier to use.
-- Documentation - need to get YARD docs added so that the API is more completely
+- **Documentation** - need to get Tomdoc added so that the API is more completely
   documented. For the time being, though, there are some fairly comprehensive
   test suites.
-- Timing - it would be crazy useful to be able to automatically log per-queue
-  statistics about how long jobs are taking. Definitely something like an "over
-  the last 5 minutes/past 1000 jobs" stat would be useful, but we may also be
-  interested in some kind of lifetime average.
+- **Refactor** - the singleton model made sense at some point for Timberline but now it's
+  cumbersome. Need to rewrite some of the basic stuff to be more OO-appropriate.
+- **Forking** - Timberline should support forking in its watcher model so that jobs can
+  be run in parallel and independently of each other.
+- **Relocate Rails** - Create a `timberline-rails` gem that includes all of our Rails-specific
+  functionality and configuration rather than have that in Timberline proper.
 
 ## Future
 
