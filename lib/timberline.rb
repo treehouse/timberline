@@ -43,8 +43,8 @@ class Timberline
     Timberline.redis.smembers("timberline_queue_names").map { |name| queue(name) }
   end
 
-  def self.queue(queue_name, read_timeout: 0, hidden: false)
-    Queue.new(queue_name, read_timeout: read_timeout, hidden: hidden)
+  def self.queue(queue_name, opts = {})
+    Queue.new(queue_name, opts)
   end
 
   def self.push(queue_name, data, metadata={})
