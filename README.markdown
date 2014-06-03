@@ -139,12 +139,11 @@ to note:
   retry the job in the event of a transient error, or put it on the error queue
   for processing if a more fatal error occurs.
 
-### The error queue
+### Error queues
 
-If you want to interact with the error queue directly, it's accessible via
-`Timberline#error_queue`. You can pop items directly off of the queue to operate
-on them if you want, or you could write a queue processor that reads off of that
-queue (its queue name should always be "Timberline\_errors").
+Each queue has its own error queue, accessible through `Queue#error_queue`.
+You can pop items directly off of the queue to operate on them if you want, or
+you could write a queue processor that reads off of that queue.
 
 ### Using the binary
 
