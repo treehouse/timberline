@@ -2,7 +2,9 @@ class Timberline
   class Queue
     attr_reader :queue_name, :read_timeout
 
-    def initialize(queue_name, read_timeout: 0, hidden: false)
+    def initialize(queue_name, opts = {})
+      read_timeout = opts.fetch(:read_timeout, 0)
+      hidden = opts.fetch(:hidden, false)
       if queue_name.nil?
         raise ArgumentError.new("Queue name must be provided.")
       end
