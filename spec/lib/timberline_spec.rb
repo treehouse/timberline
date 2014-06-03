@@ -91,16 +91,6 @@ describe Timberline do
     end
   end
 
-  describe ".error_queue" do
-    it "returns a Timberline::Queue" do
-      expect(Timberline.error_queue).to be_a Timberline::Queue
-    end
-
-    it "returns the timberline_errors queue" do
-      expect(Timberline.error_queue.queue_name).to eq("timberline_errors")
-    end
-  end
-
   describe ".queue" do
     it "returns a Timberline::Queue" do
       expect(Timberline.queue("fritters")).to be_a Timberline::Queue
@@ -166,8 +156,8 @@ describe Timberline do
         item.retries = 5
       end
 
-      it "passes the item on to the error handling" do
-        expect(Timberline).to receive(:error_item).with(item)
+      it "passes the item on to the origin queue for retry" do
+        expect_any_instance_of(Timberline::Queue).to receive(:retry_item).with(item)
         Timberline.retry_item(item)
       end
     end
@@ -175,17 +165,12 @@ describe Timberline do
 
   describe ".error_item" do
     let(:queue) { Timberline.queue("test_queue") }
-    let(:error_queue) { Timberline.error_queue }
+    let(:error_queue) { queue.error_queue }
     let(:item) { Timberline.push(queue.queue_name, "Howdy kids."); queue.pop }
 
-    before { Timberline.error_item(item) }
-
-    it "puts the item on the error_queue" do
-      expect(error_queue.length).to eq(1) 
-    end
-
-    it "updates the fatal_error_at property on the item" do
-      expect(item.fatal_error_at).not_to be_nil
+    it "passes the item on to the queue for error handling" do
+      expect_any_instance_of(Timberline::Queue).to receive(:error_item).with(item)
+      Timberline.error_item(item)
     end
   end
 

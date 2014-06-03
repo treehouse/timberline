@@ -2,14 +2,16 @@ class Timberline
   class Queue
     attr_reader :queue_name, :read_timeout
 
-    def initialize(queue_name, read_timeout= 0)
+    def initialize(queue_name, read_timeout: 0, hidden: false)
       if queue_name.nil?
         raise ArgumentError.new("Queue name must be provided.")
       end
       @queue_name = queue_name
       @read_timeout = read_timeout
       @redis = Timberline.redis
-      @redis.sadd "timberline_queue_names", queue_name
+      unless hidden
+        @redis.sadd "timberline_queue_names", queue_name
+      end
     end
 
     def delete
@@ -92,18 +94,39 @@ class Timberline
       end
     end
 
+    def retry_item(item)
+      if (item.retries < Timberline.max_retries)
+        item.retries += 1
+        item.last_tried_at = Time.now.to_f
+        add_retry_stat(item)
+        push(item)
+      else
+        error_item(item)
+      end
+    end
+
+    def error_item(item)
+      item.fatal_error_at = Time.now.to_f
+      add_error_stat(item)
+      self.error_queue.push(item)
+    end
+
     def add_retry_stat(item)
       add_stat_for_key(attr("retry_stats"), item)
     end
 
     def add_error_stat(item)
-      add_stat_for_key(attr("success_stats"), item)
+      add_stat_for_key(attr("error_stats"), item)
     end
 
     def add_success_stat(item)
       add_stat_for_key(attr("success_stats"), item)
     rescue Exception => e
       $stderr.puts "Success Stat Error: #{e.inspect}, Item: #{item.inspect}"
+    end
+
+    def error_queue
+      @error_queue ||= Timberline.queue(attr("errors"), hidden: true)
     end
 
     private

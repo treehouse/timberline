@@ -43,12 +43,8 @@ class Timberline
     Timberline.redis.smembers("timberline_queue_names").map { |name| queue(name) }
   end
 
-  def self.error_queue
-    @error_queue ||= Queue.new("timberline_errors")
-  end
-
-  def self.queue(queue_name)
-    Queue.new(queue_name)
+  def self.queue(queue_name, read_timeout: 0, hidden: false)
+    Queue.new(queue_name, read_timeout: read_timeout, hidden: hidden)
   end
 
   def self.push(queue_name, data, metadata={})
@@ -56,18 +52,13 @@ class Timberline
   end
 
   def self.retry_item(item)
-    if (item.retries < max_retries)
-      item.retries += 1
-      item.last_tried_at = Time.now.to_f
-      queue(item.origin_queue).push(item)
-    else
-      error_item(item)
-    end
+    origin_queue = queue(item.origin_queue)
+    origin_queue.retry_item(item)
   end
 
   def self.error_item(item)
-    item.fatal_error_at = Time.now.to_f
-    error_queue.push(item)
+    origin_queue = queue(item.origin_queue)
+    origin_queue.error_item(item)
   end
 
   def self.pause(queue_name)
