@@ -1,0 +1,21 @@
+0.4.1
+  - Fix a bug with calculating average_execution_time statistics
+0.4.0
+  - Test suite moved over to RSpec
+  - CI added via Travis
+  - Queue#delete! renamed to Queue#delete in accordance with ruby convention
+  - Timberline.config renamed to Timberline.configure to avoid collision with the attr_accessor
+0.3.1
+  - Fix a bug with handling errors while logging success stats
+0.3.0
+  - Rails compatability updated, support for Rails 2 removed
+0.2.1
+  - Tests switched over to nutrasuite
+  - Rails 3 compatability added
+0.2.0
+  - Added ability to pause queues
+  - Added statistics logging for successes/errors/retries
+0.1.2
+  - Rename Treeline to Timberline due to gem name conflict
+0.1.1
+  - First public release of Treeline
