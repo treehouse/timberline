@@ -316,45 +316,4 @@ describe Timberline do
       end
     end
   end
-
-  describe ".watch" do
-    let(:queue) { Timberline.queue("test_queue") }
-    let(:queue_name) { queue.queue_name }
-    let(:success_item) { Timberline::Envelope.from_json(Timberline.redis.xmembers(queue.attr("success_stats")).first) }
-    let(:retried_item) { Timberline::Envelope.from_json(Timberline.redis.xmembers(queue.attr("retry_stats")).first) }
-    let(:errored_item) { Timberline::Envelope.from_json(Timberline.redis.xmembers(queue.attr("error_stats")).first) }
-
-    before do
-      # Make sure that the watch doesn't run forever.
-      Timberline.watch_proc = lambda { queue.length > 0 }
-      Timberline.push(queue_name, "Hey There!")
-    end
-
-    context "If the item can be processed successfully" do
-      it "logs the success of the item" do
-        expect_any_instance_of(Timberline::Queue).to receive(:add_success_stat)
-        Timberline.watch(queue_name) do |item|
-          # don't do anything
-        end
-      end
-    end
-
-    context "If the item is retried" do
-      it "logs that the item was retried" do
-        expect_any_instance_of(Timberline::Queue).to receive(:add_retry_stat)
-        Timberline.watch(queue_name) do |item|
-          raise Timberline::ItemRetried
-        end
-      end
-    end
-
-    context "If the item can be processed successfully" do
-      it "logs that the item was retried" do
-        expect_any_instance_of(Timberline::Queue).to receive(:add_error_stat)
-        Timberline.watch(queue_name) do |item|
-          raise Timberline::ItemErrored
-        end
-      end
-    end
-  end
 end
