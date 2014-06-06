@@ -77,24 +77,16 @@ queue (more on that later). There are 3 ways to configure Timberline:
    your settings will all take effect. Redis defaults will be used if you omit
    anything.
 
-2. If you're including Timberline in a Rails app, there's a convenient way to
-   configure it that should fit in with the rest of your app - if you include a
-   yaml file named timberline.yaml in your config directory, Timberline will
-   automatically detect it and load it up. The syntax for this file is
-   shockingly boring:
+2. If you prefer a static config file, you can write a YAML file like the following:
 
-        development:
           database: 1
           host: 192.168.1.105
           port: 12345
           password: foobar
-        production:
-          ...etc.
 
-3. Like the yaml format but you're not using Rails? Don't worry, just write your
-   yaml file and set the TIMBERLINE\_YAML constant inside your app like so:
+  ...and then use the `TIMBERLINE_YAML` constant to specify the file's location:
 
-        TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
+          TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
 
 ### Pushing jobs onto a queue
 
@@ -167,6 +159,11 @@ queue.
 There are some options to the Timberline binary that you may find helpful -
 `timberline --help` for more. 
 
+### Rails
+
+If you're using Timberline in conjunction with a Rails environment, check out
+the [timberline-rails](https://github.com/treehouse/timberline-rails) gem.
+
 ## TODO
 
 Still to be done:
@@ -180,8 +177,6 @@ Still to be done:
   cumbersome. Need to rewrite some of the basic stuff to be more OO-appropriate.
 - **Forking** - Timberline should support forking in its watcher model so that jobs can
   be run in parallel and independently of each other.
-- **Relocate Rails** - Create a `timberline-rails` gem that includes all of our Rails-specific
-  functionality and configuration rather than have that in Timberline proper.
 
 ## Future
 

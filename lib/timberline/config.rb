@@ -10,18 +10,18 @@ class Timberline
         else
           raise "Specified Timberline config file #{TIMBERLINE_YAML} is not present."
         end
-      elsif defined? Rails.root
-        config_file = File.join(Rails.root, 'config', 'timberline.yaml')
-        if File.exists?(config_file)
-          configs = YAML.load_file(config_file)
-          config = configs[Rails.env]
-          load_from_yaml(config)
-        end
       end
+    end
 
-      # load defaults
-      @namespace  ||= 'timberline'
+    def namespace
+      @namespace ||= 'timberline'
+    end
+
+    def max_retries
       @max_retries ||= 5
+    end
+
+    def stat_timeout
       @stat_timeout ||= 60
     end
 
