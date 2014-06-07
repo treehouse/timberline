@@ -1,6 +1,7 @@
 # Timberline
 
-![](https://travis-ci.org/treehouse/timberline.svg)
+![](https://travis-ci.org/treehouse/timberline.svg)&nbsp;
+[![Gem Version](https://badge.fury.io/rb/timberline.svg)](http://badge.fury.io/rb/timberline)
 
 ## Purpose
 
@@ -20,6 +21,10 @@ kind of issues you might be dealing with:
 3. Timberline assumes that it's preferable, if not important to you, to process
    jobs as fast as you possibly can. To that end, Timberline uses blocking reads
    in Redis to pull jobs off of the queue as soon as they're available.
+
+## Documentation
+
+Documentation for Timberline is available on rubydoc.info [here](http://rubydoc.info/github/treehouse/timberline/frames). The code itself is documented with YARD.
 
 ## Concepts
 
@@ -170,11 +175,6 @@ Still to be done:
 
 - **Monitor** - A simple Sinatra interface for monitoring the statuses of queues and
   observing/resubmitting errored-out jobs.
-- **Documentation** - need to get Tomdoc added so that the API is more completely
-  documented. For the time being, though, there are some fairly comprehensive
-  test suites.
-- **Refactor** - the singleton model made sense at some point for Timberline but now it's
-  cumbersome. Need to rewrite some of the basic stuff to be more OO-appropriate.
 - **Forking** - Timberline should support forking in its watcher model so that jobs can
   be run in parallel and independently of each other.
 
