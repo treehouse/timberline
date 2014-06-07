@@ -28,6 +28,22 @@ Documentation for Timberline is available on rubydoc.info [here](http://rubydoc.
 
 ## Concepts
 
+### The Envelope
+
+Sounds SOAPy, I know. The envelope is a simple object that wraps the data you
+want to put on the queue - it's responsible for tracking things like the job ID,
+the queue it was put on, how many times it's been retried, etc., etc. It's also
+accessible to both the queue processor and whatever is putting jobs on the
+queue, so if you want to be able to check in on the administrative details (or
+add some of your own) this is a great place to do it instead of muddying up the
+meat of your message.
+
+### Workers
+
+Processing items on a Timberline queue is handled by Workers. A Worker can be
+created as simply as providing a block that executes on job items, or you can
+write your own Workers that perform special functionality.
+
 ### Retries
 
 Sometimes jobs just fail because of something that was outside of your control.
@@ -45,16 +61,6 @@ any event, Timberline maintains an error queue where jobs go when they're
 explicitly marked as bad jobs, or when they've been retried the maximum number
 of times. You can then check the jobs out and resubmit them to their original
 queue after you fix the issue.
-
-### The Envelope
-
-Sounds SOAPy, I know. The envelope is a simple object that wraps the data you
-want to put on the queue - it's responsible for tracking things like the job ID,
-the queue it was put on, how many times it's been retried, etc., etc. It's also
-accessible to both the queue processor and whatever is putting jobs on the
-queue, so if you want to be able to check in on the administrative details (or
-add some of your own) this is a great place to do it instead of muddying up the
-meat of your message.
 
 ## Usage
 
