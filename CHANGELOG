@@ -1,3 +1,6 @@
+0.7.0
+  - Add Worker objects
+  - Add YARD documentation, publish docs to rubydoc.info
 0.6.0
   - Remove Rails-specific configuration logic in preparation for release of timberline-rails
 0.5.0
