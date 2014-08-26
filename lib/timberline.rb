@@ -34,8 +34,6 @@ class Timberline
   #   if Redis::Namespace, uses that namespace directly. If nil, clears out any reference
   #   to the existing redis server.
   #
-  # @raise [StandardError] if server is not an instance of Redis, Redis::Namespace, or nil.
-  #
   def self.redis=(server)
     initialize_if_necessary
     if server.is_a? Redis
@@ -44,8 +42,6 @@ class Timberline
       @redis = server
     elsif server.nil?
       @redis = nil
-    else
-      raise "Not a valid Redis connection."
     end
   end
 
@@ -57,7 +53,7 @@ class Timberline
   # If a Redis connection has not yet been established, this method will establish one.
   #
   # @return [Redis::Namespace]
-  # 
+  #
   def self.redis
     initialize_if_necessary
     if @redis.nil?

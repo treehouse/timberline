@@ -6,7 +6,7 @@ describe Timberline do
       before { Timberline.redis = nil }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -32,17 +32,12 @@ describe Timberline do
         Timberline.redis = Redis.new
         Timberline.redis = nil
       end
-      
+
       it "clears out the existing redis server" do
         expect(Timberline.instance_variable_get("@redis")).to be_nil
       end
     end
 
-    context "if the argument is not an instance of nil, Redis, or Redis::Namespace" do
-      it "raises an exception" do
-        expect { Timberline.redis = "this isn't redis" }.to raise_error(StandardError)
-      end
-    end
   end
 
   describe ".redis" do
@@ -50,7 +45,7 @@ describe Timberline do
       before { Timberline.redis }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
 
       it "initializes a default redis server" do
@@ -232,7 +227,7 @@ describe Timberline do
     context "if Timberline hasn't been configured yet" do
       it "initializes a new configuration object" do
         Timberline.configure {}
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
 
       it "yields the new config object to the block" do
@@ -256,7 +251,7 @@ describe Timberline do
       before { Timberline.max_retries }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -278,7 +273,7 @@ describe Timberline do
       before { Timberline.stat_timeout }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -300,7 +295,7 @@ describe Timberline do
       before { Timberline.stat_timeout_seconds }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
