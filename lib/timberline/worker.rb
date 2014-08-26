@@ -6,17 +6,6 @@ class Timberline
   # easily, although this is not necessary.
   #
   class Worker
-    attr_accessor :queue
-
-    # Creates a new worker that will watch a specific queue.
-    # @param [String] queue_name the name of the queue to watch.
-    #
-    def initialize(queue_name=nil)
-      if queue_name
-        @queue = Queue.new(queue_name)
-      end
-    end
-
     # Run the watch loop for this worker. As long as #keep_watching?
     # returns true, this will pop items off the queue and process them
     # with #process_item. This method is also responsible for managing
@@ -24,8 +13,10 @@ class Timberline
     # stops, for example) and shouldn't typically be overridden when you
     # define your own worker.
     #
-    def watch
-      raise "Can't start watching until you specify a queue" unless @queue
+    # @param [String] queue_name the name of the queue to watch.
+    #
+    def watch(queue_name)
+      @queue = Queue.new(queue_name)
 
       while(keep_watching?)
         item = @queue.pop
