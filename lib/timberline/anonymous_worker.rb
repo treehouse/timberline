@@ -10,17 +10,15 @@ class Timberline
     # and error_item so that the block can easily control the processing
     # flow for queued items.
     #
-    # @param [String] queue_name the name of the queue to watch 
     # @param [Block] block the block to run against each item that gets popped 
     #   off the queue.
     #
     # @example Creating a simple AnonymousWorker
-    #   AnonymousWorker.new "test_queue" { |item| puts item.contents }
+    #   AnonymousWorker.new { |item| puts item.contents }
     #
     # @return [AnonymousWorker]
     #
-    def initialize(queue_name, &block)
-      super(queue_name)
+    def initialize(&block)
       @block = block
       fix_block_binding
     end

@@ -149,7 +149,7 @@ class Timberline
   # @see Timberline::AnonymousWorker#watch
   #
   def self.watch(queue_name, &block)
-    Timberline::AnonymousWorker.new(queue_name, &block).watch
+    Timberline::AnonymousWorker.new(&block).watch(queue_name)
   end
 
 private
