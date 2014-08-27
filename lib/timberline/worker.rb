@@ -35,7 +35,7 @@ class Timberline
 
     # Given an item off of the queue, process it appropriately.
     # Not implemented in Worker, as Worker is just a base class.
-    # 
+    #
     def process_item(item)
       raise NotImplementedError
     end
@@ -66,6 +66,12 @@ class Timberline
     def retry_item(item)
       @queue.retry_item(item)
       raise Timberline::ItemRetried
+    end
+
+    # References the logger used by timberline.
+    #
+    def logger
+      Timberline.logger
     end
   end
 end

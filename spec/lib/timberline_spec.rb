@@ -6,7 +6,7 @@ describe Timberline do
       before { Timberline.redis = nil }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -32,7 +32,7 @@ describe Timberline do
         Timberline.redis = Redis.new
         Timberline.redis = nil
       end
-      
+
       it "clears out the existing redis server" do
         expect(Timberline.instance_variable_get("@redis")).to be_nil
       end
@@ -50,7 +50,7 @@ describe Timberline do
       before { Timberline.redis }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
 
       it "initializes a default redis server" do
@@ -232,7 +232,7 @@ describe Timberline do
     context "if Timberline hasn't been configured yet" do
       it "initializes a new configuration object" do
         Timberline.configure {}
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
 
       it "yields the new config object to the block" do
@@ -256,7 +256,7 @@ describe Timberline do
       before { Timberline.max_retries }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -278,7 +278,7 @@ describe Timberline do
       before { Timberline.stat_timeout }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -300,7 +300,7 @@ describe Timberline do
       before { Timberline.stat_timeout_seconds }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -316,4 +316,19 @@ describe Timberline do
       end
     end
   end
+
+  describe ".logger=" do
+    it 'sets the Timberline logger to the value provided' do
+      logger = Logger.new(STDOUT)
+      expect{ Timberline.logger = logger }.to change(Timberline, :logger).to logger
+    end
+  end
+
+  describe ".logger" do
+    it 'sets the default Timberline logger if none is provided' do
+      Timberline.logger = nil
+      expect(Timberline.logger).to be_a Logger
+    end
+  end
+
 end

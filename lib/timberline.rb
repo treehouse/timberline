@@ -57,7 +57,7 @@ class Timberline
   # If a Redis connection has not yet been established, this method will establish one.
   #
   # @return [Redis::Namespace]
-  # 
+  #
   def self.redis
     initialize_if_necessary
     if @redis.nil?
@@ -150,6 +150,21 @@ class Timberline
   #
   def self.watch(queue_name, &block)
     Timberline::AnonymousWorker.new(&block).watch(queue_name)
+  end
+
+  # Update the logger used by Timberline
+  #
+  # @param [Logger]
+  #
+  def self.logger=(logger)
+    @@logger = logger
+  end
+
+  # Get the logger used by Timberline. If no logger is already
+  # used, it creates a stdout logger.
+  #
+  def self.logger
+    @@logger ||= Logger.new(STDOUT)
   end
 
 private
