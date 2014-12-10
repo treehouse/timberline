@@ -3,7 +3,7 @@ class Timberline
   # without defining a new class, by instead just passing in a block that will be
   # executed for each item on the queue as it's popped.
   #
-  class AnonymousWorker < Worker
+  class AnonymousWorker < Timberline::Worker
 
     # Creates a new AnonymousWorker.
     # The block's binding will be updated to give it access to retry_item
