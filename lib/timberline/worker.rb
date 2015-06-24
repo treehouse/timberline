@@ -35,7 +35,7 @@ class Timberline
 
     # Given an item off of the queue, process it appropriately.
     # Not implemented in Worker, as Worker is just a base class.
-    # 
+    #
     def process_item(item)
       raise NotImplementedError
     end

@@ -10,7 +10,7 @@ class Timberline
     # and error_item so that the block can easily control the processing
     # flow for queued items.
     #
-    # @param [Block] block the block to run against each item that gets popped 
+    # @param [Block] block the block to run against each item that gets popped
     #   off the queue.
     #
     # @example Creating a simple AnonymousWorker
