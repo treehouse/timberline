@@ -34,11 +34,13 @@ class Timberline
       binding = @block.binding
       binding.eval <<-HERE
         def retry_item(item)
-          Worker.retry_item(item)
+          Timberline.retry_item(item)
+          raise Timberline::ItemRetried
         end
 
         def error_item(item)
-          Worker.error_item(item)
+          Timberline.error_item(item)
+          raise Timberline::ItemErrored
         end
       HERE
     end

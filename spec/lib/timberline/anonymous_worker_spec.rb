@@ -7,8 +7,15 @@ describe Timberline::AnonymousWorker do
       queue.push("apple")
 
       expect do
-        Timberline.watch("foo_queue") {|job| error_item(job) }
+        Timberline.watch("foo_queue") do |job|
+          begin
+            error_item(job)
+          rescue Timberline::ItemErrored
+            break
+          end
+        end
       end.to_not raise_error
+      expect(queue.error_queue.length).to eq(1)
     end
   end
 end
