@@ -34,7 +34,7 @@ describe Timberline::Queue do
     subject { Timberline::Queue.new("fritters") }
 
     before do
-      subject.delete 
+      subject.delete
     end
 
     it "removes the queue from redis" do
