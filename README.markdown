@@ -83,7 +83,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
           c.port = 12345
           c.password = "foobar"
         end
-   
+
    ...As long as you run this block before you attempt to access your queues,
    your settings will all take effect. Redis defaults will be used if you omit
    anything.
@@ -151,7 +151,7 @@ you could write a queue processor that reads off of that queue.
 ### Using the binary
 
 In order to make reading off of the queue easier, there's a binary named
-`Timberline` included with this gem. 
+`Timberline` included with this gem.
 
 Example:
 
@@ -168,12 +168,38 @@ block until either the process is killed, or until something is added to the
 queue.
 
 There are some options to the Timberline binary that you may find helpful -
-`timberline --help` for more. 
+`timberline --help` for more.
 
 ### Rails
 
 If you're using Timberline in conjunction with a Rails environment, check out
 the [timberline-rails](https://github.com/treehouse/timberline-rails) gem.
+
+### Redis Failover
+
+The Redis client (>= v3.2) is able to [perform automatic Redis
+connection](https://github.com/redis/redis-rb#sentinel-support) failovers by
+using [Redis Sentinel](http://redis.io/topics/sentinel). In cases where this is
+enabled, pass sentinal configuration on to the Redis client using the
+"sentinals" key a configuration:
+
+Via timberline.yml:
+
+```yaml
+host: 127.0.0.1
+sentinals:
+  - host: 127.0.0.1
+    port: 26379
+```
+
+Via the Timberline.configure:
+
+```ruby
+Timberline.configure do |c|
+  # ...
+  c.sentinals = [{ host: 127.0.0.1, port: 26379 }]
+end
+```
 
 ## TODO
 

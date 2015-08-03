@@ -4,3 +4,7 @@ timeout: 10
 password: foo
 database: 3
 namespace: treecurve
+sentinals:
+  -
+    host: localhost
+    port: 111111
