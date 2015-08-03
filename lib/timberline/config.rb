@@ -21,12 +21,12 @@ class Timberline
   #   should be allowed to retry itself before it is placed on the error queue
   # @attr [Integer] stat_timeout the number of minutes that stats will stay live
   #   in redis before they are expired
-  # @attr [Array] sentinals a list of Sentinal hosts that can be connected to
+  # @attr [Array] sentinels a list of sentinel hosts that can be connected to
   #   for failover protection.
   #
   class Config
     attr_accessor :database, :host, :port, :timeout, :password,
-                  :logger, :namespace, :max_retries, :stat_timeout, :sentinals
+                  :logger, :namespace, :max_retries, :stat_timeout, :sentinels
 
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
     # Otherwise creates a default Config object.
@@ -67,7 +67,7 @@ class Timberline
         timeout: timeout,
         password: password,
         logger: logger,
-        sentinals: sentinals
+        sentinels: sentinels
       }.each do |name, value|
         config[name] = value unless value.nil?
       end
@@ -78,7 +78,7 @@ class Timberline
   private
     def load_from_yaml(yaml_config)
       raise "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password logger namespace sentinals).each do |setting|
+      %w(database host port timeout password logger namespace sentinels).each do |setting|
         self.instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end

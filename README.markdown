@@ -180,14 +180,14 @@ the [timberline-rails](https://github.com/treehouse/timberline-rails) gem.
 The Redis client (>= v3.2) is able to [perform automatic Redis
 connection](https://github.com/redis/redis-rb#sentinel-support) failovers by
 using [Redis Sentinel](http://redis.io/topics/sentinel). In cases where this is
-enabled, pass sentinal configuration on to the Redis client using the
-"sentinals" key a configuration:
+enabled, pass sentinel configuration on to the Redis client using the
+"sentinels" key a configuration:
 
 Via timberline.yml:
 
 ```yaml
 host: 127.0.0.1
-sentinals:
+sentinels:
   - host: 127.0.0.1
     port: 26379
 ```
@@ -197,7 +197,7 @@ Via the Timberline.configure:
 ```ruby
 Timberline.configure do |c|
   # ...
-  c.sentinals = [{ host: 127.0.0.1, port: 26379 }]
+  c.sentinels = [{ host: 127.0.0.1, port: 26379 }]
 end
 ```
 

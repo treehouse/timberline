@@ -36,9 +36,9 @@ describe Timberline::Config do
           expect(subject.namespace).to eq("treecurve")
         end
 
-        it "loads the sentinals from the config file" do
-          sentinals = [{"host" => "localhost", "port" => 111111}]
-          expect(subject.sentinals).to eq sentinals
+        it "loads the sentinels from the config file" do
+          sentinels = [{"host" => "localhost", "port" => 111111}]
+          expect(subject.sentinels).to eq sentinels
         end
       end
 
