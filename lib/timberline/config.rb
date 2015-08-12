@@ -3,9 +3,9 @@ class Timberline
   # as well as Timberline-specific configuration values, like how many times an
   # item should be retried in a queue.
   #
-  # @attr [Integer] database part of the redis configuration - index of the 
+  # @attr [Integer] database part of the redis configuration - index of the
   #   redis database to use
-  # @attr [String] host part of the redis configuration - the hostname of the 
+  # @attr [String] host part of the redis configuration - the hostname of the
   #   redis server
   # @attr [Integer] port part of the redis configuration - the port of the
   #   redis server
@@ -23,7 +23,7 @@ class Timberline
   #   in redis before they are expired
   #
   class Config
-    attr_accessor :database, :host, :port, :timeout, :password, 
+    attr_accessor :database, :host, :port, :timeout, :password,
                   :logger, :namespace, :max_retries, :stat_timeout
 
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
