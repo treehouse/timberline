@@ -1,4 +1,4 @@
-require 'cgi'
+require "cgi"
 
 class Timberline
   # Object that manages Timberline configuration. Responsible for Redis configs
