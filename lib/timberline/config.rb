@@ -67,8 +67,8 @@ class Timberline
 
   private
     def load_from_yaml(yaml_config)
-      raise "Missing yaml configs!" if yaml_config.nil?
-      ["database","host","port","timeout","password","logger","namespace"].each do |setting|
+      fail "Missing yaml configs!" if yaml_config.nil?
+      %w(database host port timeout password namespace).each do |setting|
         self.instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end
