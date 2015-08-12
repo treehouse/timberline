@@ -3,9 +3,9 @@ class Timberline
   # as well as Timberline-specific configuration values, like how many times an
   # item should be retried in a queue.
   #
-  # @attr [Integer] database part of the redis configuration - index of the 
+  # @attr [Integer] database part of the redis configuration - index of the
   #   redis database to use
-  # @attr [String] host part of the redis configuration - the hostname of the 
+  # @attr [String] host part of the redis configuration - the hostname of the
   #   redis server
   # @attr [Integer] port part of the redis configuration - the port of the
   #   redis server
@@ -21,14 +21,16 @@ class Timberline
   #   should be allowed to retry itself before it is placed on the error queue
   # @attr [Integer] stat_timeout the number of minutes that stats will stay live
   #   in redis before they are expired
+  # @attr [Array] sentinels a list of sentinel hosts that can be connected to
+  #   for failover protection.
   #
   class Config
-    attr_accessor :database, :host, :port, :timeout, :password, 
-                  :logger, :namespace, :max_retries, :stat_timeout
+    attr_accessor :database, :host, :port, :timeout, :password,
+                  :logger, :namespace, :max_retries, :stat_timeout, :sentinels
 
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
     # Otherwise creates a default Config object.
-    def initialize 
+    def initialize
       if defined? TIMBERLINE_YAML
         if File.exists?(TIMBERLINE_YAML)
           yaml = YAML.load_file(TIMBERLINE_YAML)
@@ -49,7 +51,7 @@ class Timberline
       @max_retries ||= 5
     end
 
-    # @return [Integer] the configured lifetime of stats (in minutes), with a default of 60 
+    # @return [Integer] the configured lifetime of stats (in minutes), with a default of 60
     def stat_timeout
       @stat_timeout ||= 60
     end
@@ -58,7 +60,15 @@ class Timberline
     def redis_config
       config = {}
 
-      { db: database, host: host, port: port, timeout: timeout, password: password, logger: logger }.each do |name, value|
+      {
+        db: database,
+        host: host,
+        port: port,
+        timeout: timeout,
+        password: password,
+        logger: logger,
+        sentinels: sentinels
+      }.each do |name, value|
         config[name] = value unless value.nil?
       end
 
@@ -68,7 +78,7 @@ class Timberline
   private
     def load_from_yaml(yaml_config)
       raise "Missing yaml configs!" if yaml_config.nil?
-      ["database","host","port","timeout","password","logger","namespace"].each do |setting|
+      %w(database host port timeout password logger namespace sentinels).each do |setting|
         self.instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end

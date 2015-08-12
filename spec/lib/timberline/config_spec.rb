@@ -35,6 +35,11 @@ describe Timberline::Config do
         it "loads the namespace from the config file" do
           expect(subject.namespace).to eq("treecurve")
         end
+
+        it "loads the sentinels from the config file" do
+          sentinels = [{"host" => "localhost", "port" => 111111}]
+          expect(subject.sentinels).to eq sentinels
+        end
       end
 
       context "and the specified file doesn't exist" do
