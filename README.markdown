@@ -99,6 +99,10 @@ queue (more on that later). There are 3 ways to configure Timberline:
 
           TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
 
+3. Running on Heroku? Define an environment variable for the URL:
+
+        export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?timeout=99&namespace=my_namespace"
+
 ### Pushing jobs onto a queue
 
 To push a job onto the queue you'll want to make use of the `Timberline#push`
@@ -151,7 +155,7 @@ you could write a queue processor that reads off of that queue.
 ### Using the binary
 
 In order to make reading off of the queue easier, there's a binary named
-`Timberline` included with this gem.
+`timberline` included with this gem.
 
 Example:
 
@@ -199,6 +203,11 @@ Timberline.configure do |c|
   # ...
   c.sentinels = [{ host: 127.0.0.1, port: 26379 }]
 end
+```
+
+Via the ENV VAR
+```bash
+export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?sentinel=host1:1111&sentinel=host2:2222"
 ```
 
 ## TODO

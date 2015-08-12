@@ -1,3 +1,5 @@
+require "cgi"
+
 class Timberline
   # Object that manages Timberline configuration. Responsible for Redis configs
   # as well as Timberline-specific configuration values, like how many times an
@@ -31,14 +33,8 @@ class Timberline
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
     # Otherwise creates a default Config object.
     def initialize
-      if defined? TIMBERLINE_YAML
-        if File.exists?(TIMBERLINE_YAML)
-          yaml = YAML.load_file(TIMBERLINE_YAML)
-          load_from_yaml(yaml)
-        else
-          raise "Specified Timberline config file #{TIMBERLINE_YAML} is not present."
-        end
-      end
+      configure_via_yaml
+      configure_via_env
     end
 
     # @return [String] the configured redis namespace, with a default of 'timberline'
@@ -56,6 +52,11 @@ class Timberline
       @stat_timeout ||= 60
     end
 
+    # @return [{host: "x", port: 1}] list of sentinel server
+    def sentinels
+      @sentinels ||= []
+    end
+
     # @return [Hash] a Redis-ready hash for use in instantiating a new redis object.
     def redis_config
       config = {}
@@ -67,7 +68,7 @@ class Timberline
         timeout: timeout,
         password: password,
         logger: logger,
-        sentinels: sentinels
+        sentinels: sentinels.empty? ? nil : sentinels
       }.each do |name, value|
         config[name] = value unless value.nil?
       end
@@ -75,11 +76,51 @@ class Timberline
       config
     end
 
-  private
+    private
+
+    def configure_via_yaml
+      return unless defined? TIMBERLINE_YAML
+      if File.exist?(TIMBERLINE_YAML)
+        yaml = YAML.load_file(TIMBERLINE_YAML)
+        load_from_yaml(yaml)
+      else
+        fail "Specified Timberline config file #{TIMBERLINE_YAML} is not present."
+      end
+    end
+
+    def convert_if_int(val)
+      # convert strings that only have integers in them to ints
+      val.match(/\A[+-]?\d+\Z/) ? val.to_i : val
+    end
+
+    def configure_via_env
+      return unless ENV.key?("TIMBERLINE_URL")
+
+      uri = URI::Parser.new.parse(ENV["TIMBERLINE_URL"])
+      fail "Must be a redis url, not #{uri.scheme.inspect}" unless uri.scheme == "redis"
+
+      @host = uri.host
+      @port = uri.port
+      @database = convert_if_int(uri.path[1..-1])
+      @password = uri.password
+
+      params = uri.query.nil? ? {} : CGI.parse(uri.query)
+      %w(timeout namespace).each do |setting|
+        next unless params.key?(setting)
+        instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
+      end
+      if params.key?("sentinel")
+        params["sentinel"].each do |val|
+          host, port = val.split(":")
+          self.sentinels += [{ "host" => host, "port" => convert_if_int(port) }]
+        end
+      end
+    end
+
     def load_from_yaml(yaml_config)
-      raise "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password logger namespace sentinels).each do |setting|
-        self.instance_variable_set("@#{setting}", yaml_config[setting])
+      fail "Missing yaml configs!" if yaml_config.nil?
+      %w(database host port timeout password namespace sentinels).each do |setting|
+        instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end
   end
