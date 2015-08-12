@@ -92,14 +92,14 @@ class Timberline
       params = uri.query.nil? ? {} : CGI.parse(uri.query)
       %w(timeout namespace).each do |setting|
         next unless params.key?(setting)
-        self.instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
+        instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
     end
 
     def load_from_yaml(yaml_config)
       fail "Missing yaml configs!" if yaml_config.nil?
       %w(database host port timeout password namespace).each do |setting|
-        self.instance_variable_set("@#{setting}", yaml_config[setting])
+        instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end
   end
