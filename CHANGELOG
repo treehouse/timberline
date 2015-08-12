@@ -1,3 +1,6 @@
+0.8.3
+  - Add support for configuring via env var
+  - Add support for Redis sentinels
 0.7.0
   - Add Worker objects
   - Add YARD documentation, publish docs to rubydoc.info
