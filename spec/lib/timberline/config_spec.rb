@@ -4,7 +4,7 @@ describe Timberline::Config do
   describe "newly created" do
     context "when the TIMBERLINE_URL env var is defined" do
       before do
-        ENV["TIMBERLINE_URL"] = "redis://:apassword@ahostname:9000/3?timeout=666&namespace=foobar&sentinel=sentinel1:1&sentinel=sentienl2:2"
+        ENV["TIMBERLINE_URL"] = "redis://:apassword@ahostname:9000/3?timeout=666&namespace=foobar&sentinel=sentinel1:1&sentinel=sentinel2:2"
       end
 
       after do
@@ -38,7 +38,7 @@ describe Timberline::Config do
       it "loads the sentinel servers" do
         expect(subject.sentinels).to eq([
           { "host" => "sentinel1", "port" => 1 },
-          { "host" => "sentienl2", "port" => 2 }
+          { "host" => "sentinel2", "port" => 2 }
         ])
       end
     end
