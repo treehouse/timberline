@@ -36,11 +36,10 @@ describe Timberline::Config do
       end
 
       it "loads the sentinel servers" do
-        expect(subject.sentinels).to eq([{
-          "host" => "sentinel1", "port" => 1
-        }, {
-          "host" => "sentienl2", "port" => 2
-        }])
+        expect(subject.sentinels).to eq([
+          { "host" => "sentinel1", "port" => 1 },
+          { "host" => "sentienl2", "port" => 2 }
+        ])
       end
     end
 
