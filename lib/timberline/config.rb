@@ -23,10 +23,12 @@ class Timberline
   #   should be allowed to retry itself before it is placed on the error queue
   # @attr [Integer] stat_timeout the number of minutes that stats will stay live
   #   in redis before they are expired
+  # @attr [Array] sentinels a list of sentinel hosts that can be connected to
+  #   for failover protection.
   #
   class Config
     attr_accessor :database, :host, :port, :timeout, :password,
-                  :logger, :namespace, :max_retries, :stat_timeout
+                  :logger, :namespace, :max_retries, :stat_timeout, :sentinels
 
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
     # Otherwise creates a default Config object.
@@ -45,16 +47,29 @@ class Timberline
       @max_retries ||= 5
     end
 
-    # @return [Integer] the configured lifetime of stats (in minutes), with a default of 60 
+    # @return [Integer] the configured lifetime of stats (in minutes), with a default of 60
     def stat_timeout
       @stat_timeout ||= 60
+    end
+
+    # @return [{host: "x", port: 1}] list of sentinel server
+    def sentinels
+      @sentinels ||= []
     end
 
     # @return [Hash] a Redis-ready hash for use in instantiating a new redis object.
     def redis_config
       config = {}
 
-      { db: database, host: host, port: port, timeout: timeout, password: password, logger: logger }.each do |name, value|
+      {
+        db: database,
+        host: host,
+        port: port,
+        timeout: timeout,
+        password: password,
+        logger: logger,
+        sentinels: sentinels.empty? ? nil : sentinels
+      }.each do |name, value|
         config[name] = value unless value.nil?
       end
 
@@ -94,11 +109,17 @@ class Timberline
         next unless params.key?(setting)
         instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
+      if params.key?("sentinel")
+        params["sentinel"].each do |val|
+          host, port = val.split(":")
+          self.sentinels += [{ "host" => host, "port" => convert_if_int(port) }]
+        end
+      end
     end
 
     def load_from_yaml(yaml_config)
       fail "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password namespace).each do |setting|
+      %w(database host port timeout password namespace sentinels).each do |setting|
         instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end

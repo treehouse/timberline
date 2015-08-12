@@ -179,6 +179,32 @@ There are some options to the Timberline binary that you may find helpful -
 If you're using Timberline in conjunction with a Rails environment, check out
 the [timberline-rails](https://github.com/treehouse/timberline-rails) gem.
 
+### Redis Failover
+
+The Redis client (>= v3.2) is able to [perform automatic Redis
+connection](https://github.com/redis/redis-rb#sentinel-support) failovers by
+using [Redis Sentinel](http://redis.io/topics/sentinel). In cases where this is
+enabled, pass sentinel configuration on to the Redis client using the
+"sentinels" key a configuration:
+
+Via timberline.yml:
+
+```yaml
+host: 127.0.0.1
+sentinels:
+  - host: 127.0.0.1
+    port: 26379
+```
+
+Via the Timberline.configure:
+
+```ruby
+Timberline.configure do |c|
+  # ...
+  c.sentinels = [{ host: 127.0.0.1, port: 26379 }]
+end
+```
+
 ## TODO
 
 Still to be done:
