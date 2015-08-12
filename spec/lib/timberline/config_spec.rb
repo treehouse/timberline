@@ -2,6 +2,40 @@ require 'spec_helper'
 
 describe Timberline::Config do
   describe "newly created" do
+    context "when the TIMBERLINE_URL env var is defined" do
+      before do
+        ENV["TIMBERLINE_URL"] = "redis://:apassword@ahostname:9000/3?timeout=666&namespace=foobar"
+      end
+
+      after do
+        ENV.delete("TIMBERLINE_URL")
+      end
+
+      it "loads the host variable from the env var" do
+        expect(subject.host).to eq("ahostname")
+      end
+
+      it "loads the port variable from the env var" do
+        expect(subject.port).to eq(9000)
+      end
+
+      it "loads the timeout variable from the env var" do
+        expect(subject.timeout).to eq(666)
+      end
+
+      it "loads the password from the env var" do
+        expect(subject.password).to eq("apassword")
+      end
+
+      it "loads the database from the env var" do
+        expect(subject.database).to eq(3)
+      end
+
+      it "loads the namespace from the env var" do
+        expect(subject.namespace).to eq("foobar")
+      end
+    end
+
     context "when the TIMBERLINE_YAML constant is defined" do
       context "and the specified file exists" do
         before do
