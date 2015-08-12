@@ -83,7 +83,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
           c.port = 12345
           c.password = "foobar"
         end
-   
+
    ...As long as you run this block before you attempt to access your queues,
    your settings will all take effect. Redis defaults will be used if you omit
    anything.
@@ -98,6 +98,10 @@ queue (more on that later). There are 3 ways to configure Timberline:
   ...and then use the `TIMBERLINE_YAML` constant to specify the file's location:
 
           TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
+
+3. Running on Heroku? Define an environment variable for the URL:
+
+        export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?timeout=99&namespace=my_namespace"
 
 ### Pushing jobs onto a queue
 
@@ -151,7 +155,7 @@ you could write a queue processor that reads off of that queue.
 ### Using the binary
 
 In order to make reading off of the queue easier, there's a binary named
-`Timberline` included with this gem. 
+`timberline` included with this gem.
 
 Example:
 
@@ -168,7 +172,7 @@ block until either the process is killed, or until something is added to the
 queue.
 
 There are some options to the Timberline binary that you may find helpful -
-`timberline --help` for more. 
+`timberline --help` for more.
 
 ### Rails
 
