@@ -205,6 +205,11 @@ Timberline.configure do |c|
 end
 ```
 
+Via the ENV VAR
+```bash
+export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?sentinel=host1:1111&sentinel=host2:2222"
+```
+
 ## TODO
 
 Still to be done:
