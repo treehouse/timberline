@@ -105,7 +105,7 @@ class Timberline
       @password = uri.password
 
       params = uri.query.nil? ? {} : CGI.parse(uri.query)
-      %w(timeout namespace).each do |setting|
+      %w(timeout namespace stat_timeout max_retries).each do |setting|
         next unless params.key?(setting)
         instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
@@ -119,7 +119,7 @@ class Timberline
 
     def load_from_yaml(yaml_config)
       fail "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password namespace sentinels).each do |setting|
+      %w(database host port timeout password namespace sentinels stat_timeout max_retries).each do |setting|
         instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end

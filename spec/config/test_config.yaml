@@ -4,6 +4,8 @@ timeout: 10
 password: foo
 database: 3
 namespace: treecurve
+max_retries: 1212
+stat_timeout: 1313
 sentinels:
   -
     host: localhost
