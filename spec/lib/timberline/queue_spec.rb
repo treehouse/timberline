@@ -182,6 +182,27 @@ describe Timberline::Queue do
     end
   end
 
+  describe "#average_execution_time" do
+    subject { Timberline::Queue.new("tacos") }
+    context "when no jobs have completed" do
+      it "returns nil" do
+        expect(subject.average_execution_time).to be_nil
+      end
+    end
+
+    context "when jobs have completed" do
+      before do
+        subject.increment_success_stat
+        subject.increment_success_stat
+        subject.increment_run_time_by(100)
+      end
+
+      it "returns the average run time" do
+        expect(subject.average_execution_time).to eq(50)
+      end
+    end
+  end
+
   describe "#reset_statistics!" do
     subject { Timberline::Queue.new("donuts") }
 
