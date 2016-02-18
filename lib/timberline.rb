@@ -4,7 +4,6 @@ require 'yaml'
 
 require 'redis'
 require 'redis-namespace'
-require 'redis-expiring-set/monkeypatch'
 
 require_relative "timberline/version"
 require_relative "timberline/exceptions"

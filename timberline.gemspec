@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "redis"
   s.add_runtime_dependency "redis-namespace"
-  s.add_runtime_dependency "redis-expiring-set"
   s.add_runtime_dependency "trollop"
   s.add_runtime_dependency "daemons"
 

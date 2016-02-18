@@ -278,7 +278,7 @@ describe Timberline do
       before { Timberline.stat_timeout }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
@@ -300,7 +300,7 @@ describe Timberline do
       before { Timberline.stat_timeout_seconds }
 
       it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
+        expect(Timberline.config).not_to be_nil
       end
     end
 
