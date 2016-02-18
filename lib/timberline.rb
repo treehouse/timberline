@@ -126,20 +126,6 @@ class Timberline
     @config.max_retries
   end
 
-  # Lazy-loads the Timberline configuration.
-  # @return [Integer] the stat_timeout expressed in minutes
-  def self.stat_timeout
-    initialize_if_necessary
-    @config.stat_timeout
-  end
-
-  # Lazy-loads the Timberline configuration.
-  # @return [Integer] the stat_timeout expressed in seconds
-  def self.stat_timeout_seconds
-    initialize_if_necessary
-    @config.stat_timeout * 60
-  end
-
   # Create and start a new AnonymousWorker with the given
   # queue_name and block. Convenience method.
   #

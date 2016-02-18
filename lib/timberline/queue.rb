@@ -125,8 +125,7 @@ class Timberline
       "#{@queue_name}:#{key}"
     end
 
-    # The number of items that have encountered fatal errors on the queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that have encountered fatal errors on the queue.
     #
     # @return [Integer]
     #
@@ -135,8 +134,7 @@ class Timberline
       result.to_i
     end
 
-    # The number of items that have been retried on the queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that have been retried on the queue.
     #
     # @return [Integer]
     #
@@ -145,8 +143,7 @@ class Timberline
       result.to_i
     end
 
-    # The number of items that were processed successfully for this queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that were processed successfully for this queue.
     #
     # @return [Integer]
     #
@@ -160,12 +157,10 @@ class Timberline
       result.to_i
     end
 
-    # Given all of the successful jobs that were executed in the last
-    # [stat_timeout] minutes, determine how long on average those jobs
+    # Given all of the successful jobs that were executed, determine how long on average those jobs
     # took to execute.
     #
-    # @return [Float] the average execution time for successful jobs in the last
-    #   [stat_timeout] minutes.
+    # @return [Float] the average execution time for successful jobs.
     #
     def average_execution_time
       return nil if number_successes == 0
