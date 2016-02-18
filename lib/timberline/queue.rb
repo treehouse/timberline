@@ -82,7 +82,7 @@ class Timberline
     #
     # @param [#to_json, Timberline::Envelope] contents either contents that can
     #   be converted to JSON and stuffed in an Envelope, or an Envelope itself
-    #   that needs to be put on the queue.  
+    #   that needs to be put on the queue.
     # @param [Hash] metadata metadata that will be attached to the envelope for
     # contents.
     #
@@ -125,57 +125,46 @@ class Timberline
       "#{@queue_name}:#{key}"
     end
 
-    # The number of items that have encountered fatal errors on the queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that have encountered fatal errors on the queue.
     #
     # @return [Integer]
     #
     def number_errors
-      Timberline.redis.xcard attr("error_stats")
+      result = Timberline.redis.get(attr("error_count")) || 0
+      result.to_i
     end
 
-    # The number of items that have been retried on the queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that have been retried on the queue.
     #
     # @return [Integer]
     #
     def number_retries
-      Timberline.redis.xcard attr("retry_stats")
+      result = Timberline.redis.get(attr("retry_count")) || 0
+      result.to_i
     end
 
-    # The number of items that were processed successfully for this queue
-    # during the last [stat_timeout] minutes.
+    # The number of items that were processed successfully for this queue.
     #
     # @return [Integer]
     #
     def number_successes
-      Timberline.redis.xcard attr("success_stats")
+      result = Timberline.redis.get(attr("success_count")) || 0
+      result.to_i
     end
 
-    # Given all of the successful jobs that were executed in the last
-    # [stat_timeout] minutes, determine how long on average those jobs
+    def total_run_duration
+      result = Timberline.redis.get(attr("total_run_duration")) || 0
+      result.to_i
+    end
+
+    # Given all of the successful jobs that were executed, determine how long on average those jobs
     # took to execute.
     #
-    # @return [Float] the average execution time for successful jobs in the last
-    #   [stat_timeout] minutes.
+    # @return [Float] the average execution time for successful jobs.
     #
     def average_execution_time
-      successes = Timberline.redis.xmembers(attr("success_stats")).map { |item| Envelope.from_json(item)}
-      times = successes.map do |item|
-        if item.finished_processing_at
-          item.finished_processing_at.to_f - item.started_processing_at.to_f
-        elsif item.fatal_error_at
-          item.fatal_error_at.to_f - item.started_processing_at.to_f
-        else
-          nil
-        end
-      end
-      times.reject! { |t| t.nil? }
-      if times.size == 0
-        0
-      else
-        times.inject(0, :+) / times.size.to_f
-      end
+      return nil if number_successes == 0
+      total_run_duration / number_successes
     end
 
     # Given an item that needs to be retried, increment the retry count,
@@ -191,7 +180,7 @@ class Timberline
       if (item.retries < Timberline.max_retries)
         item.retries += 1
         item.last_tried_at = Time.now.to_f
-        add_retry_stat(item)
+        increment_retry_stat
         push(item)
       else
         error_item(item)
@@ -205,38 +194,50 @@ class Timberline
     #
     def error_item(item)
       item.fatal_error_at = Time.now.to_f
-      add_error_stat(item)
+      increment_error_stat
       self.error_queue.push(item)
     end
 
-    # Stores an item from the queue that was retried so we can keep track
-    # of things like how many retries have been attempted on this queue, etc.
+    # Increments the queue's retried job count.
     #
-    # @param [Envelope] item an item that fatally errored on this queue
+    # @return [Integer] the count after incrementation has occured
     #
-    def add_retry_stat(item)
-      add_stat_for_key(attr("retry_stats"), item)
+    def increment_retry_stat
+      Timberline.redis.incr attr("retry_count")
     end
 
-    # Stores an item from the queue that fatally errored so we can keep track
-    # of things like how many errors have occurred on this queue, etc.
+    # Increments the queue's errored job count.
     #
-    # @param [Envelope] item an item that fatally errored on this queue
+    # @return [Integer] the count after incrementation has occured
     #
-    def add_error_stat(item)
-      add_stat_for_key(attr("error_stats"), item)
+    def increment_error_stat
+      Timberline.redis.incr attr("error_count")
     end
 
-    # Stores a successfully processed queue item as a statistic so we can keep
-    # track of things like average execution time, number of successes, etc.
+    # Increments the queue's successfully processed job count.
     #
-    # @param [Envelope] item an item that was processed successfully for this
-    #   queue
+    # @return [Integer] the count after incrementation has occured
     #
-    def add_success_stat(item)
-      add_stat_for_key(attr("success_stats"), item)
-    rescue Exception => e
-      $stderr.puts "Success Stat Error: #{e.inspect}, Item: #{item.inspect}"
+    def increment_success_stat
+      Timberline.redis.incr attr("success_count")
+    end
+
+    # Increments the queue's total runtime by [num]
+    #
+    # @params [Integer] number of seconds to increment the runtime by.
+    #
+    # @return [Integer] the current total runtime in seconds.
+    def increment_run_time_by(num)
+      Timberline.redis.incrby( attr("total_run_duration"), num )
+    end
+
+    # Resets statistics of the queue
+    #
+    def reset_statistics!
+      Timberline.redis.set( attr("retry_count"), 0 )
+      Timberline.redis.set( attr("error_count"), 0 )
+      Timberline.redis.set( attr("success_count"), 0 )
+      Timberline.redis.set( attr("total_run_duration"), 0 )
     end
 
     # @return [Timberline::Queue] a (hidden) Queue object where this queue's
@@ -246,11 +247,8 @@ class Timberline
       @error_queue ||= Timberline.queue(attr("errors"), hidden: true)
     end
 
-    private
 
-    def add_stat_for_key(key, item)
-      Timberline.redis.xadd key, item, Time.now + Timberline.stat_timeout_seconds
-    end
+    private
 
     def next_id
       Timberline.redis.incr attr("id_seq")

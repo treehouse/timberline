@@ -21,14 +21,12 @@ class Timberline
   #   will create and manage
   # @attr [Integer] max_retries the number of times that an item on the queue
   #   should be allowed to retry itself before it is placed on the error queue
-  # @attr [Integer] stat_timeout the number of minutes that stats will stay live
-  #   in redis before they are expired
   # @attr [Array] sentinels a list of sentinel hosts that can be connected to
   #   for failover protection.
   #
   class Config
     attr_accessor :database, :host, :port, :timeout, :password,
-                  :logger, :namespace, :max_retries, :stat_timeout, :sentinels
+                  :logger, :namespace, :max_retries, :sentinels
 
     # Attemps to load configuration from TIMBERLINE_YAML, if it exists.
     # Otherwise creates a default Config object.
@@ -45,11 +43,6 @@ class Timberline
     # @return [Integer] the configured maximum number of retries, with a default of 5
     def max_retries
       @max_retries ||= 5
-    end
-
-    # @return [Integer] the configured lifetime of stats (in minutes), with a default of 60
-    def stat_timeout
-      @stat_timeout ||= 60
     end
 
     # @return [{host: "x", port: 1}] list of sentinel server
@@ -105,7 +98,7 @@ class Timberline
       @password = uri.password
 
       params = uri.query.nil? ? {} : CGI.parse(uri.query)
-      %w(timeout namespace stat_timeout max_retries).each do |setting|
+      %w(timeout namespace max_retries).each do |setting|
         next unless params.key?(setting)
         instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
@@ -119,7 +112,7 @@ class Timberline
 
     def load_from_yaml(yaml_config)
       fail "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password namespace sentinels stat_timeout max_retries).each do |setting|
+      %w(database host port timeout password namespace sentinels max_retries).each do |setting|
         instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end

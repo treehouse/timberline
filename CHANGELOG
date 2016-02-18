@@ -1,5 +1,8 @@
+0.8.6
+  - Store cumulative statistics instead of full items in each state
+  - Removes stat_timeout config variable
 0.8.4
-  - Allow stat_timeout and max_retries to be set from config 
+  - Allow stat_timeout and max_retries to be set from config
 0.8.3
   - Add support for configuring via env var
   - Add support for Redis sentinels

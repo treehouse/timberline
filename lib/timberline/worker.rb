@@ -31,7 +31,9 @@ class Timberline
           end
 
           item.finished_processing_at = Time.now.to_f
-          @queue.add_success_stat(item)
+          run_time = item.finished_processing_at - item.started_processing_at
+          @queue.increment_run_time_by(run_time)
+          @queue.increment_success_stat
         rescue ItemRetried, ItemErrored
           next
         ensure

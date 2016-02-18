@@ -75,7 +75,7 @@ describe Timberline::Queue do
       subject.push("Test")
       expect(subject.length).to eq(1)
     end
-    
+
     it "properly formats data so it can be popped successfully" do
       subject.push("Test")
       expect(subject.pop).to be_a Timberline::Envelope
@@ -179,6 +179,62 @@ describe Timberline::Queue do
         expect(subject).to receive(:error_item).with(item)
         subject.retry_item(item)
       end
+    end
+  end
+
+  describe "#average_execution_time" do
+    subject { Timberline::Queue.new("tacos") }
+    context "when no jobs have completed" do
+      it "returns nil" do
+        expect(subject.average_execution_time).to be_nil
+      end
+    end
+
+    context "when jobs have completed" do
+      before do
+        subject.increment_success_stat
+        subject.increment_success_stat
+        subject.increment_run_time_by(100)
+      end
+
+      it "returns the average run time" do
+        expect(subject.average_execution_time).to eq(50)
+      end
+    end
+  end
+
+  describe "#reset_statistics!" do
+    subject { Timberline::Queue.new("donuts") }
+
+    before do
+      subject.increment_error_stat
+      subject.increment_retry_stat
+      subject.increment_success_stat
+      subject.increment_run_time_by(10)
+    end
+
+    it "resets error_count" do
+      expect(subject.number_errors).to eq(1)
+      subject.reset_statistics!
+      expect(subject.number_errors).to eq(0)
+    end
+
+    it "resets retry_count" do
+      expect(subject.number_retries).to eq(1)
+      subject.reset_statistics!
+      expect(subject.number_retries).to eq(0)
+    end
+
+    it "resets success_count" do
+      expect(subject.number_successes).to eq(1)
+      subject.reset_statistics!
+      expect(subject.number_successes).to eq(0)
+    end
+
+    it "resets total_run_duration" do
+      expect(subject.average_execution_time).to eq(10)
+      subject.reset_statistics!
+      expect(subject.average_execution_time).to be_nil
     end
   end
 end

@@ -4,7 +4,6 @@ require 'yaml'
 
 require 'redis'
 require 'redis-namespace'
-require 'redis-expiring-set/monkeypatch'
 
 require_relative "timberline/version"
 require_relative "timberline/exceptions"
@@ -125,20 +124,6 @@ class Timberline
   def self.max_retries
     initialize_if_necessary
     @config.max_retries
-  end
-
-  # Lazy-loads the Timberline configuration.
-  # @return [Integer] the stat_timeout expressed in minutes
-  def self.stat_timeout
-    initialize_if_necessary
-    @config.stat_timeout
-  end
-
-  # Lazy-loads the Timberline configuration.
-  # @return [Integer] the stat_timeout expressed in seconds
-  def self.stat_timeout_seconds
-    initialize_if_necessary
-    @config.stat_timeout * 60
   end
 
   # Create and start a new AnonymousWorker with the given

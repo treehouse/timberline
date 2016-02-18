@@ -4,7 +4,7 @@ describe Timberline::Config do
   describe "newly created" do
     context "when the TIMBERLINE_URL env var is defined" do
       before do
-        ENV["TIMBERLINE_URL"] = "redis://:apassword@ahostname:9000/3?timeout=666&namespace=foobar&sentinel=sentinel1:1&sentinel=sentinel2:2&max_retries=99&stat_timeout=12"
+        ENV["TIMBERLINE_URL"] = "redis://:apassword@ahostname:9000/3?timeout=666&namespace=foobar&sentinel=sentinel1:1&sentinel=sentinel2:2&max_retries=99"
       end
 
       after do
@@ -33,10 +33,6 @@ describe Timberline::Config do
 
       it "loads the namespace from the env var" do
         expect(subject.namespace).to eq("foobar")
-      end
-
-      it "loads the stat_timeout from the env var" do
-        expect(subject.stat_timeout).to eq(12)
       end
 
       it "loads the max_retries from the env var" do
@@ -81,10 +77,6 @@ describe Timberline::Config do
           expect(subject.max_retries).to eq(1212)
         end
 
-        it "loads the stat_timeout from the config file" do
-          expect(subject.stat_timeout).to eq(1313)
-        end
-
         it "loads the database from the config file" do
           expect(subject.database).to eq(3)
         end
@@ -121,10 +113,6 @@ describe Timberline::Config do
 
       it "configures a default max_retries of 5" do
         expect(subject.max_retries).to eq(5)
-      end
-
-      it "configures a stat_timeout of 60" do
-        expect(subject.stat_timeout).to eq(60)
       end
 
       it "doesn't configure any redis settings so that redis will use its own defaults" do

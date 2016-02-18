@@ -272,48 +272,4 @@ describe Timberline do
       end
     end
   end
-
-  describe ".stat_timeout" do
-    context "if Timberline hasn't been configured yet" do
-      before { Timberline.stat_timeout }
-
-      it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
-      end
-    end
-
-    context "if Timberline has been configured" do
-      before do
-        Timberline.configure do |c|
-          c.stat_timeout = 10
-        end
-      end
-
-      it "returns the configured number of minutes for stat timeout" do
-        expect(Timberline.stat_timeout).to eq(10)
-      end
-    end
-  end
-
-  describe ".stat_timeout_seconds" do
-    context "if Timberline hasn't been configured yet" do
-      before { Timberline.stat_timeout_seconds }
-
-      it "initializes a new configuration object" do
-        expect(Timberline.config).not_to be_nil  
-      end
-    end
-
-    context "if Timberline has been configured" do
-      before do
-        Timberline.configure do |c|
-          c.stat_timeout = 10
-        end
-      end
-
-      it "returns the configured number of seconds for stat timeout" do
-        expect(Timberline.stat_timeout_seconds).to eq(600)
-      end
-    end
-  end
 end
