@@ -82,7 +82,7 @@ class Timberline
     #
     # @param [#to_json, Timberline::Envelope] contents either contents that can
     #   be converted to JSON and stuffed in an Envelope, or an Envelope itself
-    #   that needs to be put on the queue.  
+    #   that needs to be put on the queue.
     # @param [Hash] metadata metadata that will be attached to the envelope for
     # contents.
     #
@@ -168,6 +168,7 @@ class Timberline
     #   [stat_timeout] minutes.
     #
     def average_execution_time
+      return nil if number_successes == 0
       total_run_duration / number_successes
     end
 
@@ -233,6 +234,15 @@ class Timberline
     # @return [Integer] the current total runtime in seconds.
     def increment_run_time_by(num)
       Timberline.redis.incrby( attr("total_run_duration"), num )
+    end
+
+    # Resets statistics of the queue
+    #
+    def reset_statistics!
+      Timberline.redis.set( attr("retry_count"), 0 )
+      Timberline.redis.set( attr("error_count"), 0 )
+      Timberline.redis.set( attr("success_count"), 0 )
+      Timberline.redis.set( attr("total_run_duration"), 0 )
     end
 
     # @return [Timberline::Queue] a (hidden) Queue object where this queue's
