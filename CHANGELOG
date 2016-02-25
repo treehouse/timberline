@@ -1,3 +1,5 @@
+UNRELEASED
+  - Allow queueing jobs for later execution
 0.8.4
   - Allow stat_timeout and max_retries to be set from config 
 0.8.3
