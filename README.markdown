@@ -24,7 +24,9 @@ kind of issues you might be dealing with:
 
 ## Documentation
 
-Documentation for Timberline is available on rubydoc.info [here](http://rubydoc.info/github/treehouse/timberline/frames). The code itself is documented with YARD.
+Documentation for Timberline is available on rubydoc.info
+[here](http://rubydoc.info/github/treehouse/timberline/frames). The code itself
+is documented with YARD.
 
 ## Concepts
 
@@ -105,16 +107,28 @@ queue (more on that later). There are 3 ways to configure Timberline:
 
 ### Pushing jobs onto a queue
 
-To push a job onto the queue you'll want to make use of the `Timberline#push`
+To push a job onto the queue you'll want to make use of the `Timberline.push`
 method, like so:
 
     Timberline.push "queue_name", data, { other_data: some_stuff }
 
-`queue_name` is the name of the queue you want to push data onto; data is the
+`queue_name` is the name of the queue you want to push data onto; `data` is the
 data you want to push onto the queue (remember that this all gets converted to
 JSON, so you probably want to stick to things that represent well as strings),
 and the optional third argument is a hash of any extra parameters you want to
 include in the job's envelope.
+
+### Pushing jobs onto a queue for execution at a latter day/month/century
+
+To push a job onto the queue to be run at a latter time, provide a `run_at`
+attribute as part of third argument to `Timberline.push`. For example, if you
+wanted to run a job 5 minutes from now, you might do something like this:
+
+    Timeberline.push "queue_name", data, { run_at: DateTime.now + 300 }
+
+*Caveat*: There are no guarantees the job will run exactly at the time provided,
+just that it will be executed by the watcher some time after the provided `run_at`
+time.
 
 ### Reading from a queue
 
