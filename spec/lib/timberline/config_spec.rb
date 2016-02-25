@@ -109,7 +109,7 @@ describe Timberline::Config do
         end
 
         it "raises an exception to let you know the file doesn't exist" do
-          expect { Timberline::Config.new }.to raise_error
+          expect { Timberline::Config.new }.to raise_error(StandardError)
         end
       end
     end
