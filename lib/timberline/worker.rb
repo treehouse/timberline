@@ -20,6 +20,10 @@ class Timberline
 
       while(keep_watching?)
         item = @queue.pop
+        if item.open_later?
+          @queue.push(item)
+          next
+        end
         @executing_job = true
         item.started_processing_at = Time.now.to_f
 
