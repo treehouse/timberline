@@ -83,7 +83,7 @@ queue (more on that later). There are 3 ways to configure Timberline:
           c.port = 12345
           c.password = "foobar"
         end
-   
+
    ...As long as you run this block before you attempt to access your queues,
    your settings will all take effect. Redis defaults will be used if you omit
    anything.
@@ -98,6 +98,10 @@ queue (more on that later). There are 3 ways to configure Timberline:
   ...and then use the `TIMBERLINE_YAML` constant to specify the file's location:
 
           TIMBERLINE_YAML = 'path/to/your/yaml/file.yaml'
+
+3. Running on Heroku? Define an environment variable for the URL:
+
+        export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?timeout=99&namespace=my_namespace"
 
 ### Pushing jobs onto a queue
 
@@ -151,7 +155,7 @@ you could write a queue processor that reads off of that queue.
 ### Using the binary
 
 In order to make reading off of the queue easier, there's a binary named
-`Timberline` included with this gem. 
+`timberline` included with this gem.
 
 Example:
 
@@ -168,12 +172,43 @@ block until either the process is killed, or until something is added to the
 queue.
 
 There are some options to the Timberline binary that you may find helpful -
-`timberline --help` for more. 
+`timberline --help` for more.
 
 ### Rails
 
 If you're using Timberline in conjunction with a Rails environment, check out
 the [timberline-rails](https://github.com/treehouse/timberline-rails) gem.
+
+### Redis Failover
+
+The Redis client (>= v3.2) is able to [perform automatic Redis
+connection](https://github.com/redis/redis-rb#sentinel-support) failovers by
+using [Redis Sentinel](http://redis.io/topics/sentinel). In cases where this is
+enabled, pass sentinel configuration on to the Redis client using the
+"sentinels" key a configuration:
+
+Via timberline.yml:
+
+```yaml
+host: 127.0.0.1
+sentinels:
+  - host: 127.0.0.1
+    port: 26379
+```
+
+Via the Timberline.configure:
+
+```ruby
+Timberline.configure do |c|
+  # ...
+  c.sentinels = [{ host: 127.0.0.1, port: 26379 }]
+end
+```
+
+Via the ENV VAR
+```bash
+export TIMBERLINE_URL="redis://:foobar@192.168.1.105:12345/1?sentinel=host1:1111&sentinel=host2:2222"
+```
 
 ## TODO
 

@@ -20,16 +20,24 @@ class Timberline
 
       while(keep_watching?)
         item = @queue.pop
+        @executing_job = true
         item.started_processing_at = Time.now.to_f
 
         begin
-          process_item(item)
+          begin
+            process_item(item)
+          rescue StandardError => e
+            handle_process_exception(e, item)
+          end
+
+          item.finished_processing_at = Time.now.to_f
+          @queue.add_success_stat(item)
         rescue ItemRetried, ItemErrored
           next
+        ensure
+          @executing_job = false
         end
 
-        item.finished_processing_at = Time.now.to_f
-        @queue.add_success_stat(item)
       end
     end
 
@@ -46,6 +54,24 @@ class Timberline
     # @return [boolean]
     def keep_watching?
       true
+    end
+
+    # Whether the worker is currently executing a job.
+    #
+    # @return [boolean]
+    def executing_job?
+      @executing_job == true
+    end
+
+    # Called when process_item has resulted in an exception. Exceptions are
+    # handled by default by reraising. This method is available to allow
+    # subclasses to override or extend how exceptions are handled. A subclass
+    # may, for example, want to log errors, handle specific error types in
+    # specific ways, or call error_item by default on all errors.
+    #
+    # @raise By default, raises the error it is provided.
+    def handle_process_exception(exception, item)
+      raise exception
     end
 
     # Given an item this worker is processing, have the queue mark it
