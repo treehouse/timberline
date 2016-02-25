@@ -90,7 +90,7 @@ describe Timberline::Envelope do
   end
 
   describe "#operate_later?" do
-    let(:base_data_hash) { { contents: "test content" }}
+    let(:base_data_hash) { { contents: "test content" } }
     let(:json_string) { JSON.unparse(data_hash) }
     let(:envelope) { Timberline::Envelope.from_json(json_string) }
 
@@ -103,7 +103,10 @@ describe Timberline::Envelope do
     end
 
     context "future job with run_at set" do
-      let(:data_hash) { base_data_hash.merge(run_at: DateTime.now + 300) } # 5min from now
+      let(:data_hash) {
+        # 5min from now
+        base_data_hash.merge(run_at: DateTime.now + 300)
+      }
 
       it "can operate on the envelope later" do
         expect(envelope.open_later?).to eq(true)
@@ -111,7 +114,10 @@ describe Timberline::Envelope do
     end
 
     context "old job with run_at set" do
-      let(:data_hash) { base_data_hash.merge(run_at: DateTime.now - 1) } # 1s ago
+      let(:data_hash) {
+        # 1s ago
+        base_data_hash.merge(run_at: DateTime.now - 1)
+      }
 
       it "can operate on the envelope now" do
         expect(envelope.open_later?).to eq(false)
