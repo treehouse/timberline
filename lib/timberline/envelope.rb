@@ -45,7 +45,7 @@ class Timberline
       JSON.unparse(build_envelope_hash)
     end
 
-    # Determines if an envelope should be operated on later than
+    # Determines if an envelope should be operated later than
     # right now.
     #
     # @return [Boolean]
