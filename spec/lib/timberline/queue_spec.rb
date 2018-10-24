@@ -38,11 +38,11 @@ describe Timberline::Queue do
     end
 
     it "removes the queue from redis" do
-      expect(Timberline.redis["fritters"]).to be_nil 
+      expect(Timberline.redis.get("fritters")).to be_nil 
     end
 
     it "removes all of the queue's attributes from redis" do
-      expect(Timberline.redis["fritters:*"]).to be_nil
+      expect(Timberline.redis.get("fritters:*")).to be_nil
     end
 
     it "removes the queue from the Timberline queue listing" do
