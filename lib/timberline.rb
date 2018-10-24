@@ -141,6 +141,13 @@ class Timberline
     @config.stat_timeout * 60
   end
 
+  # Lazy-loads the Timberline configuration.
+  # @return [Boolean]
+  def self.log_job_results?
+    initialize_if_necessary
+    @config.log_job_result_stats
+  end
+
   # Create and start a new AnonymousWorker with the given
   # queue_name and block. Convenience method.
   #
