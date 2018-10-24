@@ -249,7 +249,6 @@ class Timberline
     private
 
     def add_stat_for_key(key, item)
-      return unless Timberline.log_job_results?
       Timberline.redis.xadd key, item, Time.now + Timberline.stat_timeout_seconds
     end
 
