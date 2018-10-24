@@ -54,7 +54,7 @@ class Timberline
 
     # @return [Boolean] configuration setting for logging each job success or error in redis
     # created in response to max memory limit on redis queues in aws
-    def log_job_result?
+    def log_job_result_stats
       @log_job_result_stats ||= false
     end
 
@@ -111,7 +111,7 @@ class Timberline
       @password = uri.password
 
       params = uri.query.nil? ? {} : CGI.parse(uri.query)
-      %w(timeout namespace stat_timeout max_retries).each do |setting|
+      %w(timeout namespace stat_timeout max_retries log_job_result_stats).each do |setting|
         next unless params.key?(setting)
         instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
@@ -125,7 +125,7 @@ class Timberline
 
     def load_from_yaml(yaml_config)
       fail "Missing yaml configs!" if yaml_config.nil?
-      %w(database host port timeout password namespace sentinels stat_timeout max_retries).each do |setting|
+      %w(database host port timeout password namespace sentinels stat_timeout max_retries log_job_result_stats).each do |setting|
         instance_variable_set("@#{setting}", yaml_config[setting])
       end
     end
