@@ -99,6 +99,11 @@ class Timberline
       val.match(/\A[+-]?\d+\Z/) ? val.to_i : val
     end
 
+    def convert_if_bool(val)
+      # convert potential string respresentations of boolean values to ruby booleans
+      val.to_s.strip.downcase == "true"
+    end
+
     def configure_via_env
       return unless ENV.key?("TIMBERLINE_URL")
 
@@ -111,7 +116,11 @@ class Timberline
       @password = uri.password
 
       params = uri.query.nil? ? {} : CGI.parse(uri.query)
-      %w(timeout namespace stat_timeout max_retries log_job_result_stats).each do |setting|
+      %w(log_job_result_stats).each do |setting|
+        next unless params.key?(setting)
+        instance_variable_set("@#{setting}", convert_if_bool(params[setting][0]))
+      end
+      %w(timeout namespace stat_timeout max_retries).each do |setting|
         next unless params.key?(setting)
         instance_variable_set("@#{setting}", convert_if_int(params[setting][0]))
       end
