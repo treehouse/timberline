@@ -99,21 +99,21 @@ class Timberline
     # @see Timberline::Queue#pop
     #
     def pause
-      @redis.set(attr("paused"), "true")
+      @redis[attr("paused")] = "true"
     end
 
     # Takes this queue back out of paused mode.
     # @see Timberline::Queue#pop
     #
     def unpause
-      @redis.set(attr("paused"), "false")
+      @redis[attr("paused")] = "false"
     end
 
     # Indicates whether or not this queue is currently in paused mode.
     # @return [boolean]
     #
     def paused?
-      @redis.get(attr("paused")) == "true"
+      @redis[attr("paused")] == "true"
     end
 
     # Given a key, create a string namespaced to this queue name.
