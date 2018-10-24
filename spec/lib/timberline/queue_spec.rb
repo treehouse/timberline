@@ -113,9 +113,6 @@ describe Timberline::Queue do
     let(:item) { subject.push("apple"); subject.pop }
 
     before do
-      Timberline.configure do |c|
-        c.log_job_result_stats = true
-      end
       subject.error_item(item)
     end
 
@@ -138,9 +135,6 @@ describe Timberline::Queue do
 
     context "when the item hasn't been retried before" do
       before do
-        Timberline.configure do |c|
-          c.log_job_result_stats = true
-        end
         subject.retry_item(item)
       end
 
@@ -159,9 +153,6 @@ describe Timberline::Queue do
 
     context "when the item has been retried before" do
       before do
-        Timberline.configure do |c|
-          c.log_job_result_stats = true
-        end
         item.retries = 3
         subject.retry_item(item)
       end
