@@ -190,4 +190,64 @@ describe Timberline::Queue do
       end
     end
   end
+
+  describe "#add_--_stat" do
+
+    context "error stat logging" do
+      
+      subject    { Timberline::Queue.new("popovers") }
+      let(:item) { subject.push("butter"); subject.pop }
+
+      it "doesn't log an error if log_job_result_stats is set to false (default setting)" do
+        subject.add_error_stat(item)
+        expect(subject.number_errors).to eq(0)
+      end
+
+      it "logs an error if log_job_result_stats is set to true" do
+        Timberline.configure do |c|
+          c.log_job_result_stats = true
+        end
+        subject.add_error_stat(item)
+        expect(subject.number_errors).to eq(1)
+      end
+    end
+
+    context "success stat logging" do
+      
+      subject    { Timberline::Queue.new("dutch_oven") }
+      let(:item) { subject.push("strawberry_jam"); subject.pop }
+
+      it "doesn't log a success if log_job_result_stats is set to false (default setting)" do
+        subject.add_success_stat(item)
+        expect(subject.number_successes).to eq(0)
+      end
+
+      it "logs a success if log_job_result_stats is set to true" do
+        Timberline.configure do |c|
+          c.log_job_result_stats = true
+        end
+        subject.add_success_stat(item)
+        expect(subject.number_successes).to eq(1)
+      end
+    end
+
+    context "retry stat logging" do
+      
+      subject    { Timberline::Queue.new("pancakes") }
+      let(:item) { subject.push("blueberry"); subject.pop }
+
+      it "doesn't log a retry attempt if log_job_result_stats is set to false (default setting)" do
+        subject.add_retry_stat(item)
+        expect(subject.number_retries).to eq(0)
+      end
+
+      it "logs a retry attempt if log_job_result_stats is set to true" do
+        Timberline.configure do |c|
+          c.log_job_result_stats = true
+        end
+        subject.add_retry_stat(item)
+        expect(subject.number_retries).to eq(1)
+      end
+    end
+  end
 end
