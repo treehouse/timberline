@@ -88,4 +88,40 @@ describe Timberline::Envelope do
       expect(envelope.fritters).to eq "the bacon kind"
     end
   end
+
+  describe "#operate_later?" do
+    let(:base_data_hash) { { contents: "test content" } }
+    let(:json_string) { JSON.unparse(data_hash) }
+    let(:envelope) { Timberline::Envelope.from_json(json_string) }
+
+    context "job without run_at set" do
+      let(:data_hash) { base_data_hash }
+
+      it "can operate on the envelope now" do
+        expect(envelope.open_later?).to eq(false)
+      end
+    end
+
+    context "future job with run_at set" do
+      let(:data_hash) do
+        # 5min from now
+        base_data_hash.merge(run_at: DateTime.now + 300)
+      end
+
+      it "can operate on the envelope later" do
+        expect(envelope.open_later?).to eq(true)
+      end
+    end
+
+    context "old job with run_at set" do
+      let(:data_hash) do
+        # 1s ago
+        base_data_hash.merge(run_at: DateTime.now - 1)
+      end
+
+      it "can operate on the envelope now" do
+        expect(envelope.open_later?).to eq(false)
+      end
+    end
+  end
 end

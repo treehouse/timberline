@@ -45,6 +45,17 @@ class Timberline
       JSON.unparse(build_envelope_hash)
     end
 
+    # Determines if an envelope should be operated later than
+    # right now.
+    #
+    # @return [Boolean]
+    def open_later?
+      return false unless run_at
+
+      open_time = DateTime.parse(run_at)
+      DateTime.now < open_time
+    end
+
     # Passes any missing methods on to the metadata hash to provide better access.
     # @example Easily read from metadata
     #   some_envelope.origin_queue # returns metadata["origin_queue"]
