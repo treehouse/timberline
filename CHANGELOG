@@ -1,5 +1,6 @@
 0.8.6
-  - Turned off job stat logging by default
+  - Turned off job stat logging by default (configure with log_job_result_stats config property)
+  - Updated outdated redis api
 0.8.4
   - Allow stat_timeout and max_retries to be set from config 
 0.8.3
