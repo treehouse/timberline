@@ -93,5 +93,11 @@ class Timberline
       @queue.retry_item(item)
       raise Timberline::ItemRetried
     end
+
+    # References the logger used by timberline.
+    #
+    def logger
+      Timberline.logger
+    end
   end
 end
